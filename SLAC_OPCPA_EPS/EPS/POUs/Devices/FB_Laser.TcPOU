@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_Laser" Id="{eeae44b8-5281-462f-b9ad-0ed693927e51}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Laser
+VAR_INPUT
+	nVoltageRaw : INT;
+	bAmphosOn : BOOL;
+END_VAR
+VAR_IN_OUT CONSTANT
+	stSetpoints : ST_LaserSetpoints;
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: VOLTAGE
+		io: i
+		field: HOPR 10.0
+		field: LOPR 0.0
+		field: LSV MINOR
+		field: LLSV MAJOR
+		field: EGU Volts
+	'}
+	fVoltage : LREAL;
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fVoltage := F_Scale(
+	fRawData := nVoltageRaw,
+	fRawDataLowerOffLimit := GVL_EL3174.fRawLowerLimit,
+	fRawDataUpperOffLimit := GVL_EL3174.fRawUpperLimit,
+	fScaleDataLowerOffLimit := GVL_EL3174.fScaleLowerLimit,
+	fScaleDataUpperOffLimit := GVL_EL3174.fScaleUpperLimit);
+	
+IF  bAmphosOn AND fVoltage < stSetpoints.nMinNominalVoltage THEN
+	bError := TRUE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="Reset" Id="{d8197360-9c92-40b1-83fa-a89bbb3a2d6e}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bError := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Laser">
+      <LineId Id="111" Count="8" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Laser.Reset">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

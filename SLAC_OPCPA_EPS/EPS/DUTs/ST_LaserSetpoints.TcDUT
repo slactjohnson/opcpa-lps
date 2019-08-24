@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <DUT Name="ST_LaserSetpoints" Id="{2d3526ec-8638-4f89-a072-c7f0a369da3b}">
+    <Declaration><![CDATA[TYPE ST_LaserSetpoints :
+STRUCT
+	{attribute 'pytmc' := '
+		pv: MIN_VOLTAGE
+		io: io
+		field: EGU Volts
+	'}
+	// Minimum voltage the laser will be allowed to operate at
+	nMinVoltage : LREAL;
+	{attribute 'pytmc' := '
+		pv: MIN_NOMINAL_VOLTAGE
+		io: io
+		field: EGU Volts
+	'}
+	// Minimum voltage for the laser to be operating nominally
+	nMinNominalVoltage : LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

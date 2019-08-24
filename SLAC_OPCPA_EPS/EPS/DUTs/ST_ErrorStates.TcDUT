@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <DUT Name="ST_ErrorStates" Id="{01fc80e0-e88b-4244-badd-6975c9c0b2a0}">
+    <Declaration><![CDATA[TYPE ST_ErrorStates :
+STRUCT
+	// Leak Alarms
+	bLeakOpticalTableAmphosOn : BOOL; // Leak on the optical table with Amphos on
+	bLeakOpticalTableNoLaser : BOOL; // Leak on the optical table with no laser on
+	bLeakOpcpaCarbideOn : BOOL; // Leak inside the OPCPA with Carbide on
+	bLeakUnderTable : BOOL; // Leak under the table
+	bLeakInsideRacks : BOOL; // Leak inside the racks
+	
+	// Temperature loop alarms
+	bChillerLoop01 : BOOL; // Temperature too high in loop 01
+	bChillerLoop02 : BOOL; // Temperature too high in loop 02
+	bChillerLoop03 : BOOL; // Temperature too high in loop 03
+	bChillerLoop04 : BOOL; // Temperature too high in loop 04
+	
+	// Beam Errors
+	bAmphosBeam : BOOL; // Amphos beam error
+	bOpcpaBeam : BOOL; // OPCPA beam error
+	
+	// Temperature monitors
+	bTempMon01 : BOOL; // Temperature too high at location 01
+	bTempMon02 : BOOL; // Temperature too high at location 02
+	bTempMon03 : BOOL; // Temperature too high at location 03
+	bTempMon04 : BOOL; // Temperature too high at location 04
+	bTempMon05 : BOOL; // Temperature too high at location 05
+	bTempMon06 : BOOL; // Temperature too high at location 06
+	bTempMon07 : BOOL; // Temperature too high at location 07
+	bTempMon08 : BOOL; // Temperature too high at location 08
+	
+	// Dump chiller
+	bDumpChiller : BOOL; // Dump chiller error
+	bBaseplateChiller : BOOL; // Baseplate chiller error
+	
+	// Amphos MRC
+	bAmphosMRC01 : BOOL; // Amphos MRC 01 Error
+	bAmphosMRC02 : BOOL; // Amphos MRC 01 Error
+	bAmphosMRC03 : BOOL; // Amphos MRC 01 Error
+	
+	// Hardware Failure
+	bHardwareFailure : BOOL; // A component of the EPS has failed
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

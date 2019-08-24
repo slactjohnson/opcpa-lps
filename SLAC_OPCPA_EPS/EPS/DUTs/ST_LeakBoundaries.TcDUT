@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <DUT Name="ST_LeakBoundaries" Id="{984a6730-ff5d-4e76-ab98-a071061d040f}">
+    <Declaration><![CDATA[TYPE ST_LeakBoundaries :
+STRUCT
+	{attribute 'pytmc' := '
+		pv: L_MIN1
+		io: io
+	'}
+	nLMin1 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MAX1
+		io: io
+	'}
+	nLMax1 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MIN2
+		io: io
+	'}
+	nLMin2 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MAX2
+		io: io
+	'}
+	nLMax2 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MIN3
+		io: io
+	'}
+	nLMin3 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MAX3
+		io: io
+	'}
+	nLMax3 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MIN4
+		io: io
+	'}
+	nLMin4 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MAX4
+		io: io
+	'}
+	nLMax4 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MIN5
+		io: io
+	'}
+	nLMin5 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MAX5
+		io: io
+	'}
+	nLMax5 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MIN6
+		io: io
+	'}
+	nLMin6 : UINT;
+	{attribute 'pytmc' := '
+		pv: L_MAX6
+		io: io
+	'}
+	nLMax6 : UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

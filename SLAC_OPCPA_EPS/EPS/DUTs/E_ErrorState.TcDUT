@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <DUT Name="E_ErrorState" Id="{80c7e080-f1ad-4bb0-91e9-0db085ce1dee}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ErrorState :
+(
+	normal := 0,
+	optical_table_leak_amphos_on,
+	optical_table_leak_no_laser,
+	opcpa_leak_carbide_on,
+	leak_under_table,
+	
+	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

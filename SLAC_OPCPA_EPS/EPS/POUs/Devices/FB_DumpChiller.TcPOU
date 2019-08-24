@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_DumpChiller" Id="{116e5a5e-5390-4f77-a571-6eef4757f21f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DumpChiller
+VAR_INPUT
+	bAmphosOn : BOOL;
+	bDumpChillerFlow : BOOL;
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bAmphosOn AND NOT bDumpChillerFlow THEN
+	bError := TRUE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="Reset" Id="{798c5e10-f7ad-4fe8-969f-0ab4a0d7941b}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bError := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_DumpChiller">
+      <LineId Id="18" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DumpChiller.Reset">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

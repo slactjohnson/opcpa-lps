@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <GVL Name="GVL_TemperatureMonitor" Id="{e923988d-0374-4c64-b59e-91da63738dbe}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL PERSISTENT
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON01'}
+	stTempMonSP01 : ST_TemperatureMonitorSetpoints;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON02'}
+	stTempMonSP02 : ST_TemperatureMonitorSetpoints;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON03'}
+	stTempMonSP03 : ST_TemperatureMonitorSetpoints;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON04'}
+	stTempMonSP04 : ST_TemperatureMonitorSetpoints;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON05'}
+	stTempMonSP05 : ST_TemperatureMonitorSetpoints;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON06'}
+	stTempMonSP06 : ST_TemperatureMonitorSetpoints;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON07'}
+	stTempMonSP07 : ST_TemperatureMonitorSetpoints;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON08'}
+	stTempMonSP08 : ST_TemperatureMonitorSetpoints;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <GVL Name="GVL_IO" Id="{c8b20b5e-d11e-4d29-9934-9abc78f03f88}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	(* CX2020 *)
+
+	(* Slot1 EL3174 *)
+	nAmphosVoltageRaw AT %I* : INT; // Ch1
+	
+	(* Slot2 EL3174 *)
+	nOpcpaVoltageRaw AT %I* : INT; // Ch1
+	
+	(* Slot3 EL9189 *)
+	
+	(* Slot4 EL3174 *)
+	nTempMonRaw01 AT %I* : INT; // Ch1
+	nTempMonRaw02 AT %I* : INT; // Ch2
+	nTempMonRaw03 AT %I* : INT; // Ch3
+	nTempMonRaw04 AT %I* : INT; // Ch4
+	
+	(* Slot5 EL3174 *)
+	nTempMonRaw05 AT %I* : INT; // Ch1
+	nTempMonRaw06 AT %I* : INT; // Ch2
+	nTempMonRaw07 AT %I* : INT; // Ch3
+	nTempMonRaw08 AT %I* : INT; // Ch4
+	
+	(* Slot6 EL1259 Inputs *)
+	bAmphosOn AT %I* : BOOL; // Ch1
+	bLeakDetected AT %I* : BOOL; // Ch2
+	bLoopTempSW01 AT %I* : BOOL; // Ch3 Loop 01 NC Temp switch
+	bLoopTempSW02 AT %I* : BOOL; // Ch4 Loop 02 NC Temp switch
+	bLoopTempSW03 AT %I* : BOOL; // Ch5 Loop 03 NC Temp switch
+	bLoopTempSW04 AT %I* : BOOL; // Ch6 Loop 04 NC Temp switch
+	bDumpChillerFlow AT %I* : BOOL; // Ch7 Dump chiller NC flow sensor
+	bBaseplateChillerFlow AT %I* : BOOL; // Ch8 Baseplate chiller NC flow sensor
+	
+	(* Slot6 EL1259 Outputs *)
+	bAmphosAttenuatorEnable AT %Q* : BOOL; // Ch1
+	bAmphosAttenuatorEnableManualOperation AT %Q* : BOOL := TRUE;
+	bAmphosShutterEnable AT %Q* : BOOL; // Ch2
+	bAmphosShutterEnableManualOperation AT %Q* : BOOL := TRUE;
+	bCarbideShutterEnable AT %Q* : BOOL; // Ch3
+	bCarbideShutterEnableManualOperation AT %Q* : BOOL := TRUE;
+	
+	(* Slot7 EL9184 *)
+	
+	(* Slot8 EL1259 *)
+	
+	(* Slot9 EL9184 *)
+	
+	(* Slot10 ES2624 *)
+	bDumpChillerRelay AT %Q* : BOOL; // Ch1 Dump chiller NC relay
+	bBaseplateChillerRelay AT %Q* : BOOL; // Ch2 Baseplate chiller NC relay
+	bAmphosRelay AT %Q* : BOOL; // Ch3 Amphos Interlock relay
+	
+	(* Slot11 EL6022 *)
+	
+	(* Slot12 EL9505 *)
+	
+	(* Slot13 EL1124 *)
+	bCarbideOn AT %I* : BOOL; // Ch1
+	bAmphosMRC01 AT %I* : BOOL; // Ch2 NC Amphos MRC switch
+	bAmphosMRC02 AT %I* : BOOL; // Ch3 NC Amphos MRC switch
+	bAmphosMRC03 AT %I* : BOOL; // Ch4 NC Amphos MRC switch
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

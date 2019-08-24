@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="F_AmphosEnable" Id="{985578da-c888-4cd6-8fc2-8ee3835dc59d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AmphosEnable : BOOL
+VAR_INPUT
+	fAmphosVoltage : LREAL;
+END_VAR
+VAR_IN_OUT CONSTANT
+	stAmphosSetpoints : ST_LaserSetpoints;
+	stErrors : ST_ErrorStates;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_AmphosEnable := FALSE;
+
+// Disable amphos if there is a hardware failure
+IF stErrors.bHardwareFailure THEN
+	RETURN;
+END_IF
+
+IF stErrors.bAmphosBeam AND fAmphosVoltage < stAmphosSetpoints.nMinVoltage THEN
+	RETURN;
+END_IF
+
+F_AmphosEnable := TRUE;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_AmphosEnable">
+      <LineId Id="12" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="13" Count="5" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

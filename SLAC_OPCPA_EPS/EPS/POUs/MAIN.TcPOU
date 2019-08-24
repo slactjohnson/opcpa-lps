@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="MAIN" Id="{749355aa-8fe6-4a8e-b863-c3c2acf01034}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	stErrors : ST_ErrorStates;
+	fbErrorTriggers : FB_ErrorTriggers;
+	
+	(* Leak Monitor *)
+	{attribute 'pytmc' := 'pv: HPO:TTSIM:DEV01'}
+	fbTraceTekModbus : FB_TraceTekModbus;
+	{attribute 'pytmc' := 'pv: HPO:LPS:LEAK:RESET'}
+	bLeakMonitorReset : BOOL;
+	{attribute 'pytmc' := 'pv: HPO:LPS:LEAK'}
+	fbLeakMonitor : FB_LeakMonitor;
+	
+	(* Loop temperature monitors *)
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP01'}
+	fbChillerLoop01 : FB_ChillerLoop;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP02'}
+	fbChillerLoop02 : FB_ChillerLoop;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP03'}
+	fbChillerLoop03 : FB_ChillerLoop;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP04'}
+	fbChillerLoop04 : FB_ChillerLoop;
+	
+	(* Laser monitors *)
+	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS'}
+	fbAmphos : FB_Laser;
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:AMPHOS:RESET
+		io: io
+	'}
+	bAmphosReset : BOOL;
+
+	{attribute 'pytmc' := 'pv: HPO:LPS:OPCPA'}
+	fbOpcpa : FB_Laser;
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:OPCPA:RESET
+		io: io
+	'}
+	bOpcpaReset : BOOL;
+	
+	(* Temperature monitors *)
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON01'}
+	fbTempMon01 : FB_TemperatureMonitor;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON02'}
+	fbTempMon02 : FB_TemperatureMonitor;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON03'}
+	fbTempMon03 : FB_TemperatureMonitor;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON04'}
+	fbTempMon04 : FB_TemperatureMonitor;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON05'}
+	fbTempMon05 : FB_TemperatureMonitor;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON06'}
+	fbTempMon06 : FB_TemperatureMonitor;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON07'}
+	fbTempMon07 : FB_TemperatureMonitor;
+	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON08'}
+	fbTempMon08 : FB_TemperatureMonitor;
+	
+	fbDumpChiller : FB_DumpChiller;
+	fbBaseplateChiller : FB_BaseplateChiller;
+	
+	fbAmphosMRC01 : FB_AmphosMRC;
+	fbAmphosMRC02 : FB_AmphosMRC;
+	fbAmphosMRC03 : FB_AmphosMRC;
+	
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Get current inputs and measurements and detect errors *)
+
+fbLeakMonitor(
+	nLocationResistance := fbTraceTekModbus.nLocationResistance,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	bCarbideOn := GVL_IO.bCarbideOn,
+	bLeakDetected := GVL_IO.bLeakDetected,
+	stBoundaries := GVL_TraceTek.stLeakMonitorBoundaries,
+	bLeakOpticalTableAmphosOn => stErrors.bLeakOpticalTableAmphosOn,
+	bLeakOpticaltableNoLaser => stErrors.bLeakOpticalTableNoLaser,
+	bLeakOpcpaCarbideOn => stErrors.bLeakOpcpaCarbideOn,
+	bLeakUnderTable => stErrors.bLeakUnderTable,
+	bLeakInsideRacks => stErrors.bLeakInsideRacks
+);
+
+fbChillerLoop01(
+	bTempSwitch := GVL_IO.bLoopTempSW01,
+	bError => stErrors.bChillerLoop01
+);
+
+fbChillerLoop02(
+	bTempSwitch := GVL_IO.bLoopTempSW02,
+	bError => stErrors.bChillerLoop02
+);
+
+fbChillerLoop03(
+	bTempSwitch := GVL_IO.bLoopTempSW03,
+	bError => stErrors.bChillerLoop03
+);
+
+fbChillerLoop04(
+	bTempSwitch := GVL_IO.bLoopTempSW04,
+	bError => stErrors.bChillerLoop04
+);
+
+fbAmphos(
+	nVoltageRaw := GVL_IO.nAmphosVoltageRaw,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_Laser.stAmphosSP,
+	bError => stErrors.bAmphosBeam
+);
+	
+fbOpcpa(
+	nVoltageRaw := GVL_IO.nOpcpaVoltageRaw,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_Laser.stOpcpaSP,
+	bError => stErrors.bOpcpaBeam
+);
+
+fbTempMon01(
+	nTempMonRaw := GVL_IO.nTempMonRaw01,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_TemperatureMonitor.stTempMonSP01,
+	bError => stErrors.bTempMon01
+);
+	
+fbTempMon02(
+	nTempMonRaw := GVL_IO.nTempMonRaw02,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_TemperatureMonitor.stTempMonSP02,
+	bError => stErrors.bTempMon02
+);
+
+fbTempMon03(
+	nTempMonRaw := GVL_IO.nTempMonRaw03,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_TemperatureMonitor.stTempMonSP03,
+	bError => stErrors.bTempMon03
+);
+	
+fbTempMon04(
+	nTempMonRaw := GVL_IO.nTempMonRaw04,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_TemperatureMonitor.stTempMonSP04,
+	bError => stErrors.bTempMon04
+);
+	
+fbTempMon05(
+	nTempMonRaw := GVL_IO.nTempMonRaw05,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_TemperatureMonitor.stTempMonSP05,
+	bError => stErrors.bTempMon05
+);
+	
+fbTempMon06(
+	nTempMonRaw := GVL_IO.nTempMonRaw06,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_TemperatureMonitor.stTempMonSP06,
+	bError => stErrors.bTempMon06
+);
+	
+fbTempMon07(
+	nTempMonRaw := GVL_IO.nTempMonRaw07,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_TemperatureMonitor.stTempMonSP07,
+	bError => stErrors.bTempMon07
+);
+	
+fbTempMon08(
+	nTempMonRaw := GVL_IO.nTempMonRaw08,
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stSetpoints := GVL_TemperatureMonitor.stTempMonSP08,
+	bError => stErrors.bTempMon08
+);
+
+fbDumpChiller(
+	bAmphosOn := GVL_IO.bAmphosOn,
+	bDumpChillerFlow := GVL_IO.bDumpChillerFlow,
+	bError => stErrors.bDumpChiller
+);
+
+fbBaseplateChiller(
+	bBaseplateChillerFlow := GVL_IO.bBaseplateChillerFlow,
+	bError => stErrors.bBaseplateChiller
+);
+	
+fbAmphosMRC01(
+	bAmphosOn := GVL_IO.bAmphosOn,
+	bMRC := GVL_IO.bAmphosMRC01,
+	bError => stErrors.bAmphosMRC01
+);
+
+fbAmphosMRC02(
+	bAmphosOn := GVL_IO.bAmphosOn,
+	bMRC := GVL_IO.bAmphosMRC02,
+	bError => stErrors.bAmphosMRC02
+);
+
+fbAmphosMRC03(
+	bAmphosOn := GVL_IO.bAmphosOn,
+	bMRC := GVL_IO.bAmphosMRC03,
+	bError => stErrors.bAmphosMRC03
+);
+
+
+GVL_IO.bAmphosAttenuatorEnable := F_AmphosAttenuatorEnable(
+	bAmphosOn := GVL_IO.bAmphosOn,
+	stErrors := stErrors
+);
+
+GVL_IO.bAmphosShutterEnable := F_AmphosShutterEnable(
+	bAmphosOn := GVL_IO.bAmphosOn,
+	fOpcpaVoltage := fbOpcpa.fVoltage,
+	bLoopTempOverride01 := fbChillerLoop01.bOperatorOverride,
+	bLoopTempOverride02 := fbChillerLoop02.bOperatorOverride,
+	bLoopTempOverride03 := fbChillerLoop03.bOperatorOverride,
+	bLoopTempOverride04 := fbChillerLoop04.bOperatorOverride,
+	stOpcpaSetpoints := GVL_Laser.stOpcpaSP,
+	stErrors := stErrors
+);
+	
+GVL_IO.bCarbideShutterEnable := F_CarbideShutterEnable(stErrors := stErrors);
+	
+GVL_IO.bDumpChillerRelay := F_DumpChillerEnable(stErrors := stErrors);
+
+GVL_IO.bBaseplateChillerRelay := F_BaseplateChillerEnable(stErrors := stErrors);
+
+GVL_IO.bAmphosRelay := F_AmphosEnable(
+	fAmphosVoltage := fbAmphos.fVoltage,
+	stAmphosSetpoints := GVL_Laser.stAmphosSP,
+	stErrors := stErrors
+);
+
+// Detect leak location
+fbTraceTekModbus(
+	nModbusSlaveAddress := GVL_TraceTek.nModbusSlaveAddress,
+	bLeakDetected := GVL_IO.bLeakDetected,
+	bError => stErrors.bHardwareFailure
+);
+
+// As per the specification, the reset PV is not checked until after the EPS has taken action
+
+// Check for new errors
+fbErrorTriggers(stErrors := stErrors);
+
+IF fbErrorTriggers.NewLeakError() THEN
+	// If there is a new error turn off reset
+	bLeakMonitorReset := FALSE;
+ELSIF bLeakMonitorReset THEN
+	// If there are no new errors and reset is on, reset the errors
+	fbLeakMonitor.Reset();
+	fbErrorTriggers.ResetLeakTriggers();
+END_IF
+
+IF fbErrorTriggers.stNewErrors.bAmphosBeam THEN
+	bAmphosReset := FALSE;
+ELSIF bAmphosReset THEN
+	fbAmphos.Reset();
+	fbErrorTriggers.ResetAmphosTrigger();
+END_IF
+
+IF fbErrorTriggers.stNewErrors.bOpcpaBeam THEN
+	bOpcpaReset := FALSE;
+ELSIF bOpcpaReset THEN
+	fbOpcpa.Reset();
+	fbErrorTriggers.ResetOpcpaTrigger();
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="1349" Count="5" />
+      <LineId Id="1660" Count="0" />
+      <LineId Id="1355" Count="29" />
+      <LineId Id="1695" Count="0" />
+      <LineId Id="1385" Count="5" />
+      <LineId Id="1696" Count="0" />
+      <LineId Id="1391" Count="5" />
+      <LineId Id="1787" Count="0" />
+      <LineId Id="1397" Count="5" />
+      <LineId Id="1788" Count="0" />
+      <LineId Id="1403" Count="5" />
+      <LineId Id="1789" Count="0" />
+      <LineId Id="1409" Count="5" />
+      <LineId Id="1790" Count="0" />
+      <LineId Id="1415" Count="5" />
+      <LineId Id="1791" Count="0" />
+      <LineId Id="1421" Count="5" />
+      <LineId Id="1792" Count="0" />
+      <LineId Id="1427" Count="5" />
+      <LineId Id="1793" Count="0" />
+      <LineId Id="1433" Count="5" />
+      <LineId Id="1794" Count="0" />
+      <LineId Id="1439" Count="30" />
+      <LineId Id="1599" Count="1" />
+      <LineId Id="1473" Count="11" />
+      <LineId Id="1697" Count="0" />
+      <LineId Id="1485" Count="10" />
+      <LineId Id="1698" Count="0" />
+      <LineId Id="1496" Count="1" />
+      <LineId Id="1868" Count="1" />
+      <LineId Id="1866" Count="0" />
+      <LineId Id="1870" Count="0" />
+      <LineId Id="1873" Count="0" />
+      <LineId Id="1875" Count="0" />
+      <LineId Id="1871" Count="0" />
+      <LineId Id="1692" Count="1" />
+      <LineId Id="1684" Count="1" />
+      <LineId Id="1672" Count="0" />
+      <LineId Id="1688" Count="0" />
+      <LineId Id="1666" Count="0" />
+      <LineId Id="1686" Count="0" />
+      <LineId Id="1668" Count="1" />
+      <LineId Id="1687" Count="0" />
+      <LineId Id="1531" Count="0" />
+      <LineId Id="1690" Count="0" />
+      <LineId Id="1663" Count="0" />
+      <LineId Id="1711" Count="2" />
+      <LineId Id="1715" Count="0" />
+      <LineId Id="1717" Count="1" />
+      <LineId Id="1714" Count="0" />
+      <LineId Id="1719" Count="2" />
+      <LineId Id="1723" Count="3" />
+      <LineId Id="1603" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_LeakMonitor" Id="{e43e7b93-d8f6-4d91-924b-e9e5b24db374}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LeakMonitor
+VAR_INPUT
+	bLeakDetected : BOOL;
+	bAmphosOn : BOOL;
+	bCarbideOn : BOOL;
+	nLocationResistance: UINT;
+END_VAR
+VAR_IN_OUT CONSTANT
+	stBoundaries : ST_LeakBoundaries;
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: LOTAO_ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bLeakOpticalTableAmphosOn : BOOL := FALSE; // Leak on the optical table with Amphos on
+	{attribute 'pytmc' := '
+		pv: LOTNL_ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bLeakOpticalTableNoLaser : BOOL := FALSE; // Leak on the optical table with no laser on
+	{attribute 'pytmc' := '
+		pv: LOCO_ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bLeakOpcpaCarbideOn : BOOL := FALSE; // Leak inside the OPCPA with Carbide on
+	{attribute 'pytmc' := '
+		pv: LUT_ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bLeakUnderTable : BOOL := FALSE; // Leak under the table
+	{attribute 'pytmc' := '
+		pv: LIR_ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bLeakInsideRacks : BOOL := FALSE; // Leak inside the racks
+END_VAR
+VAR
+	{attribute 'pytmc' := '
+		pv: LOC
+		io: i
+	'}
+	eLeakLocation : E_LeakLocation := E_LeakLocation.NoLeak;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bLeakDetected THEN
+	IF stBoundaries.nLMin1 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax4 THEN
+		IF bAmphosOn THEN
+			eLeakLocation := E_LeakLocation.OpticalTable;
+			bLeakOpticalTableAmphosOn := TRUE;
+		ELSIF NOT bCarbideOn THEN
+			eLeakLocation := E_LeakLocation.OpticalTable;
+			bLeakOpticalTableNoLaser := TRUE;
+		END_IF
+	END_IF
+	
+	IF bCarbideOn AND stBoundaries.nLMin1 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax2 THEN
+		eLeakLocation := E_LeakLocation.Opcpa;
+		bLeakOpcpaCarbideOn := TRUE;
+	END_IF
+	
+	IF stBoundaries.nLMin5 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax5 THEN
+		eLeakLocation := E_LeakLocation.UnderTable;
+		bLeakUnderTable := TRUE;
+	END_IF
+	
+	IF stBoundaries.nLMin6 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax6 THEN
+		eLeakLocation := E_LeakLocation.InsideRacks;
+		bLeakInsideRacks := TRUE;
+	END_IF
+END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="Reset" Id="{99e2e7d1-3dd4-4f42-8f02-0e9f34a50a59}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eLeakLocation := E_LeakLocation.NoLeak;
+bLeakOpticalTableAmphosOn := FALSE;
+bLeakOpticalTableNoLaser := FALSE;
+bLeakOpcpaCarbideOn := FALSE;
+bLeakUnderTable := FALSE;
+bLeakInsideRacks := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_LeakMonitor">
+      <LineId Id="322" Count="0" />
+      <LineId Id="317" Count="0" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="319" Count="0" />
+      <LineId Id="308" Count="0" />
+      <LineId Id="324" Count="1" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="326" Count="1" />
+      <LineId Id="330" Count="1" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="332" Count="3" />
+      <LineId Id="453" Count="0" />
+      <LineId Id="336" Count="1" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LeakMonitor.Reset">
+      <LineId Id="14" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

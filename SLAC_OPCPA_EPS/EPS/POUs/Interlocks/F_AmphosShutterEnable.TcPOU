@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="F_AmphosShutterEnable" Id="{a7fc5b7f-48ee-48e8-a6f9-0fc0af7200c2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AmphosShutterEnable : BOOL
+VAR_INPUT
+	bAmphosOn : BOOL;
+	fOpcpaVoltage : LREAL;
+	bLoopTempOverride01 : BOOL;
+	bLoopTempOverride02 : BOOL;
+	bLoopTempOverride03 : BOOL;
+	bLoopTempOverride04 : BOOL;
+END_VAR
+VAR_IN_OUT CONSTANT
+	stErrors : ST_ErrorStates;
+	stOpcpaSetpoints : ST_LaserSetpoints;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Start with closing the shutter as the default behavior
+F_AmphosShutterEnable := FALSE;
+
+// Close shutter if there is a hardware failure
+IF stErrors.bHardwareFailure THEN
+	RETURN;
+END_IF
+
+// Close shutter if there is a leak on the optical table with the amphos on, a leak under the table, or a leak inside the OPCPA with Carbide on
+IF stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable THEN
+	RETURN;
+END_IF
+
+// Close shutter if the amphos is on and the temperature is too high in any loop. Ignore if operator override is enabled
+IF bAmphosOn AND (
+(NOT bLoopTempOverride01 AND stErrors.bChillerLoop01) OR 
+(NOT bLoopTempOverride02 AND stErrors.bChillerLoop02) OR 
+(NOT bLoopTempOverride03 AND stErrors.bChillerLoop03) OR 
+(NOT bLoopTempOverride04 AND stErrors.bChillerLoop04)) THEN
+	RETURN;
+END_IF
+
+// Close shutter if in OPCPA beam error state and OPCPA voltage too low
+IF fOpcpaVoltage < stOpcpaSetpoints.nMinVoltage AND stErrors.bOpcpaBeam THEN
+	RETURN;
+END_IF
+
+// Close shutter if temperature too high at any monitor location
+IF stErrors.bTempMon01 OR stErrors.bTempMon02 OR stErrors.bTempMon03 OR stErrors.bTempMon04 OR stErrors.bTempMon05 OR 
+stErrors.bTempMon06 OR stErrors.bTempMon07 OR stErrors.bTempMon08 THEN
+	RETURN;
+END_IF
+	
+// Close shutter if there is a Dump Chiller error
+IF stErrors.bDumpChiller THEN
+	RETURN;
+END_IF
+
+// Close shutter if there are errors on the additional MRCs
+IF stErrors.bAmphosMRC02 OR stErrors.bAmphosMRC03 THEN
+	RETURN;
+END_IF
+
+// Enable shutter control
+F_AmphosShutterEnable := TRUE;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_AmphosShutterEnable">
+      <LineId Id="336" Count="1" />
+      <LineId Id="391" Count="0" />
+      <LineId Id="393" Count="2" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="338" Count="37" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

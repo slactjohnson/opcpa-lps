@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_ChillerLoop" Id="{c2a5fec4-a67f-4351-a69c-81c3c23f0976}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ChillerLoop
+VAR_INPUT
+	bTempSwitch : BOOL; // NC Temperature switch. Indicates when temperature is too high
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL := FALSE;
+	{attribute 'pytmc' := '
+		pv: OVERRIDE
+		io: io
+	'}
+	bOperatorOverride : BOOL := FALSE;
+END_VAR
+VAR
+	{attribute 'pytmc' := '
+		pv: LOCATION
+		io: io
+	'}
+	sLocation : STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bError := NOT bTempSwitch;
+
+// Reset the operator override if the system returns to normal tempreature range
+IF bTempSwitch THEN
+	bOperatorOverride := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_ChillerLoop">
+      <LineId Id="25" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="32" Count="2" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

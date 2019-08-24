@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_TemperatureMonitor" Id="{c966e73b-970a-48c9-bfee-5d892dbd2a9a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TemperatureMonitor
+VAR_INPUT
+	nTempMonRaw : INT;
+	bAmphosOn : BOOL;
+END_VAR
+VAR_IN_OUT
+	stSetpoints : ST_TemperatureMonitorSetpoints;
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv:
+		io: i
+		field: EGU C
+		field: LOPR 0.0
+		field: HOPR 1000
+		field: LSV MINOR
+	'}
+	fTemperature : LREAL; // Temperature reading in celsius
+	fMonitorVoltage : LREAL;
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fMonitorVoltage := F_Scale(
+	fRawData := nTempMonRaw,
+	fRawDataLowerOffLimit := GVL_EL3174.fRawLowerLimit,
+	fRawDataUpperOffLimit := GVL_EL3174.fRawUpperLimit,
+	fScaleDataLowerOffLimit := GVL_EL3174.fScaleLowerLimit,
+	fScaleDataUpperOffLimit := GVL_EL3174.fScaleUpperLimit);
+
+fTemperature := fMonitorVoltage * 100;
+	
+bError := fTemperature > stSetpoints.fMaxTemperature AND bAmphosOn;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TemperatureMonitor">
+      <LineId Id="73" Count="9" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

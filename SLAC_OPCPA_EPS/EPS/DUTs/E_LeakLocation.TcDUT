@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <DUT Name="E_LeakLocation" Id="{06f1d997-621d-4634-8016-7c31c5f73e8f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_LeakLocation :
+(
+	NoLeak := 0,
+	OpticalTable := 1,
+	Opcpa := 2,
+	UnderTable := 3,
+	InsideRacks := 4
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="F_DumpChillerEnable" Id="{eacb95fa-49ef-4c8d-8057-f0d541675cea}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_DumpChillerEnable : BOOL
+VAR_INPUT
+END_VAR
+VAR_IN_OUT CONSTANT
+	stErrors : ST_ErrorStates;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_DumpChillerEnable := FALSE;
+
+IF stErrors.bHardwareFailure THEN
+	RETURN;
+END_IF
+
+IF stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpticalTableNoLaser OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable THEN
+	RETURN;
+END_IF
+
+F_DumpChillerEnable := TRUE;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_DumpChillerEnable">
+      <LineId Id="12" Count="0" />
+      <LineId Id="29" Count="2" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="13" Count="5" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

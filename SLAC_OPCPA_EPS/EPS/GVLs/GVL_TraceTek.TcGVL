@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <GVL Name="GVL_TraceTek" Id="{69094c0a-8e7d-4944-912b-7a8aa3ff193d}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	(* Modbus address *)
+	nModbusSlaveAddress : BYTE := 199;
+END_VAR
+VAR_GLOBAL PERSISTENT
+	{attribute 'pytmc' := 'pv: HPO:LPS:LEAK'}
+	stLeakMonitorBoundaries : ST_LeakBoundaries;
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>
