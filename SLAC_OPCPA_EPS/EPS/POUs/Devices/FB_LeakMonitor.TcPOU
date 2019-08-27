@@ -1,15 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="FB_LeakMonitor" Id="{e43e7b93-d8f6-4d91-924b-e9e5b24db374}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_LeakMonitor
+    <Declaration><![CDATA[// Detect leaks and leak locations
+FUNCTION_BLOCK FB_LeakMonitor
 VAR_INPUT
-	bLeakDetected : BOOL;
-	bAmphosOn : BOOL;
-	bCarbideOn : BOOL;
-	nLocationResistance: UINT;
+	bLeakDetected : BOOL; // Whether a leak was detected
+	bAmphosOn : BOOL; // Whether the Amphos is on
+	bCarbideOn : BOOL; // Whether the Carbide is on
+	nLocationResistance: UINT; // Used for calculating the location of the leak
 END_VAR
 VAR_IN_OUT CONSTANT
-	stBoundaries : ST_LeakBoundaries;
+	stBoundaries : ST_LeakBoundaries; // Setpoints for calculating leak locations from location resistance
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -63,11 +64,12 @@ VAR
 		pv: LOC
 		io: i
 	'}
-	eLeakLocation : E_LeakLocation := E_LeakLocation.NoLeak;
+	eLeakLocation : E_LeakLocation := E_LeakLocation.NoLeak; // Location of the leak
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF bLeakDetected THEN
+      <ST><![CDATA[// If there is a leak, detect the location of the leak and latch the error
+IF bLeakDetected THEN
 	IF stBoundaries.nLMin1 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax4 THEN
 		IF bAmphosOn THEN
 			eLeakLocation := E_LeakLocation.OpticalTable;
@@ -96,7 +98,8 @@ END_IF
 ]]></ST>
     </Implementation>
     <Method Name="Reset" Id="{99e2e7d1-3dd4-4f42-8f02-0e9f34a50a59}">
-      <Declaration><![CDATA[METHOD Reset
+      <Declaration><![CDATA[// Reset latched errors
+METHOD Reset
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -110,6 +113,7 @@ bLeakInsideRacks := FALSE;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_LeakMonitor">
+      <LineId Id="519" Count="0" />
       <LineId Id="322" Count="0" />
       <LineId Id="317" Count="0" />
       <LineId Id="450" Count="0" />

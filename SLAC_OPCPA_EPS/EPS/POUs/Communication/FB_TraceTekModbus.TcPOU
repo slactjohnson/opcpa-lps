@@ -1,21 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="FB_TraceTekModbus" Id="{0f7af4f5-240b-40c0-81d3-4ad14d941ee4}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_TraceTekModbus
+    <Declaration><![CDATA[// Communicates with the TraceTek hardware over Modbus to get more information about a leak
+FUNCTION_BLOCK FB_TraceTekModbus
 VAR_INPUT
-	nModbusSlaveAddress : BYTE;;
-	bLeakDetected : BOOL;
-	bResetError : BOOL;
+	nModbusSlaveAddress : BYTE; // Modbus address of slave to be read from
+	bLeakDetected : BOOL; // Whether a leak has been detected
+	bResetError : BOOL; // Reset signal for error
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
 		pv: LOC_RES
 		io: input
 	'}
-	nLocationResistance: UINT;
-	bError : BOOL := FALSE;
-	nErrorId : MODBUS_ERRORS := MODBUS_ERRORS.MODBUSERROR_NO_ERROR;
-	bNewResistanceValue : BOOL;
+	nLocationResistance: UINT; // Used for calculating the location of the leak
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL := FALSE; // Flag for Modbus communication errors
+	nErrorId : MODBUS_ERRORS := MODBUS_ERRORS.MODBUSERROR_NO_ERROR; // Description of Modbus error
 END_VAR
 VAR
 	aModbusBuffer : WORD := 16#FFFF;  // Infinite until real value is read from device
@@ -34,34 +42,36 @@ END_VAR
 	nErrorId := MODBUS_ERRORS.MODBUSERROR_NO_ERROR;
 END_IF
 
+// Update modbus status
 fbModbusMaster.Execute := FALSE;
 fbModbusMaster.ReadInputRegs();
-IF NOT fbModbusMaster.BUSY OR fbModbusMaster.Error THEN // Read finished
-	IF fbModbusMaster.Error THEN // Error occurred
-		bError := TRUE;
-		nErrorId := fbModbusMaster.ErrorId;
-	END_IF
 
-	
-	IF bLeakDetected THEN // Start reading
-		fbModbusMaster.UnitID := nModbusSlaveAddress;
-		fbModbusMaster.Execute := TRUE;
-		fbModbusMaster.ReadInputRegs();
-	END_IF
+IF fbModbusMaster.Error THEN
+	bError := TRUE;
+	nErrorId := fbModbusMaster.ErrorId;
+END_IF
+
+IF NOT fbModbusMaster.BUSY AND bLeakDetected THEN // Start reading
+	fbModbusMaster.UnitID := nModbusSlaveAddress;
+	fbModbusMaster.Execute := TRUE;
+	fbModbusMaster.ReadInputRegs();
 END_IF
 
 nLocationResistance := WORD_TO_UINT(aModbusBuffer);]]></ST>
     </Implementation>
     <LineIds Name="FB_TraceTekModbus">
       <LineId Id="115" Count="2" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="122" Count="7" />
-      <LineId Id="165" Count="0" />
-      <LineId Id="160" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="214" Count="1" />
+      <LineId Id="204" Count="1" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="124" Count="0" />
       <LineId Id="163" Count="0" />
-      <LineId Id="131" Count="1" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="133" Count="0" />
+      <LineId Id="131" Count="2" />
       <LineId Id="119" Count="1" />
       <LineId Id="9" Count="0" />
     </LineIds>

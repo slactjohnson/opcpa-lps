@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="FB_TemperatureMonitor" Id="{c966e73b-970a-48c9-bfee-5d892dbd2a9a}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_TemperatureMonitor
+    <Declaration><![CDATA[// Monitors temperature sensors
+FUNCTION_BLOCK FB_TemperatureMonitor
 VAR_INPUT
-	nTempMonRaw : INT;
-	bAmphosOn : BOOL;
+	nTempMonRaw : INT; // Raw signal from the ADC
+	bAmphosOn : BOOL; // Whether the Amphos is on
 END_VAR
 VAR_IN_OUT
-	stSetpoints : ST_TemperatureMonitorSetpoints;
+	stSetpoints : ST_TemperatureMonitorSetpoints; // Temperature sensor setpoints
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -19,7 +20,6 @@ VAR_OUTPUT
 		field: LSV MINOR
 	'}
 	fTemperature : LREAL; // Temperature reading in celsius
-	fMonitorVoltage : LREAL;
 	{attribute 'pytmc' := '
 		pv: ERROR
 		io: i
@@ -28,11 +28,11 @@ VAR_OUTPUT
 		field: ZNAM OK
 		field: ONAM ERROR
 	'}
-	bError : BOOL;
+	bError : BOOL; // Whether a temperature event happened. Goes back to normal by itself
 END_VAR
-VAR
-END_VAR
-]]></Declaration>
+VAR_TEMP
+	fMonitorVoltage : LREAL; // Voltage calculated from the raw ADC input
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[fMonitorVoltage := F_Scale(
 	fRawData := nTempMonRaw,

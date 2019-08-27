@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="F_AmphosEnable" Id="{985578da-c888-4cd6-8fc2-8ee3835dc59d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION F_AmphosEnable : BOOL
+    <Declaration><![CDATA[// Interlock logic for the Amphos relay
+FUNCTION F_AmphosEnable : BOOL
 VAR_INPUT
-	fAmphosVoltage : LREAL;
+	fAmphosVoltage : LREAL; // The Amphos voltage
 END_VAR
 VAR_IN_OUT CONSTANT
-	stAmphosSetpoints : ST_LaserSetpoints;
-	stErrors : ST_ErrorStates;
+	stAmphosSetpoints : ST_LaserSetpoints; // The Amphos setpoints
+	stErrors : ST_ErrorStates; // Currently detected errors
 END_VAR
 VAR
 END_VAR
@@ -15,11 +16,12 @@ END_VAR
     <Implementation>
       <ST><![CDATA[F_AmphosEnable := FALSE;
 
-// Disable amphos if there is a hardware failure
+// Disable Amphos if there is a hardware failure
 IF stErrors.bHardwareFailure THEN
 	RETURN;
 END_IF
 
+// Disable Amphos if there is a beam 
 IF stErrors.bAmphosBeam AND fAmphosVoltage < stAmphosSetpoints.nMinVoltage THEN
 	RETURN;
 END_IF
@@ -32,6 +34,7 @@ F_AmphosEnable := TRUE;
       <LineId Id="29" Count="0" />
       <LineId Id="31" Count="2" />
       <LineId Id="30" Count="0" />
+      <LineId Id="45" Count="0" />
       <LineId Id="13" Count="5" />
       <LineId Id="7" Count="0" />
     </LineIds>

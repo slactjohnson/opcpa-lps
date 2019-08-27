@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="FB_Laser" Id="{eeae44b8-5281-462f-b9ad-0ed693927e51}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Laser
+    <Declaration><![CDATA[// Monitors the lasers for under voltage events
+FUNCTION_BLOCK FB_Laser
 VAR_INPUT
-	nVoltageRaw : INT;
-	bAmphosOn : BOOL;
+	nVoltageRaw : INT; // The raw signal collected from the ADC
+	bAmphosOn : BOOL; // Whether the amphos is turned on
 END_VAR
 VAR_IN_OUT CONSTANT
-	stSetpoints : ST_LaserSetpoints;
+	stSetpoints : ST_LaserSetpoints; // Setpoints for the laser
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -19,7 +20,7 @@ VAR_OUTPUT
 		field: LLSV MAJOR
 		field: EGU Volts
 	'}
-	fVoltage : LREAL;
+	fVoltage : LREAL; // Voltage calculated from the raw ADC input
 	{attribute 'pytmc' := '
 		pv: ERROR
 		io: i
@@ -28,9 +29,7 @@ VAR_OUTPUT
 		field: ZNAM OK
 		field: ONAM ERROR
 	'}
-	bError : BOOL;
-END_VAR
-VAR
+	bError : BOOL; // Whether an error was detected. Latches until reset
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -40,13 +39,15 @@ END_VAR
 	fRawDataUpperOffLimit := GVL_EL3174.fRawUpperLimit,
 	fScaleDataLowerOffLimit := GVL_EL3174.fScaleLowerLimit,
 	fScaleDataUpperOffLimit := GVL_EL3174.fScaleUpperLimit);
-	
+
+// Set error if amphos is below nominal voltage
 IF  bAmphosOn AND fVoltage < stSetpoints.nMinNominalVoltage THEN
 	bError := TRUE;
 END_IF]]></ST>
     </Implementation>
     <Method Name="Reset" Id="{d8197360-9c92-40b1-83fa-a89bbb3a2d6e}">
-      <Declaration><![CDATA[METHOD Reset
+      <Declaration><![CDATA[// Reset latched errors
+METHOD Reset
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -55,7 +56,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_Laser">
-      <LineId Id="111" Count="8" />
+      <LineId Id="111" Count="5" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="117" Count="2" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_Laser.Reset">

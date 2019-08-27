@@ -212,13 +212,6 @@
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>GVL_IO.bAmphosOn</Name>
-							<Comment>
-								<![CDATA[ Ch1]]>
-							</Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_IO.nAmphosVoltageRaw</Name>
 							<Comment>
 								<![CDATA[ Ch1]]>
@@ -287,6 +280,13 @@
 								<![CDATA[ Ch4]]>
 							</Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.bAmphosOn</Name>
+							<Comment>
+								<![CDATA[ Ch1]]>
+							</Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_IO.bLeakDetected</Name>

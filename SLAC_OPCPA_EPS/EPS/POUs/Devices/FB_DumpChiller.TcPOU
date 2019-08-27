@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="FB_DumpChiller" Id="{116e5a5e-5390-4f77-a571-6eef4757f21f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_DumpChiller
+    <Declaration><![CDATA[// Monitors the dump chiller from the flow sensor
+FUNCTION_BLOCK FB_DumpChiller
 VAR_INPUT
-	bAmphosOn : BOOL;
-	bDumpChillerFlow : BOOL;
+	bAmphosOn : BOOL; // Whether the amphos is turned on
+	bDumpChillerFlow : BOOL; // Signal from the flow sensor. Normally high.
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -15,7 +16,7 @@ VAR_OUTPUT
 		field: ZNAM OK
 		field: ONAM ERROR
 	'}
-	bError : BOOL;
+	bError : BOOL; // Whether an error was detected. Latches until reset
 END_VAR
 VAR
 END_VAR
@@ -26,7 +27,8 @@ END_VAR
 END_IF]]></ST>
     </Implementation>
     <Method Name="Reset" Id="{798c5e10-f7ad-4fe8-969f-0ab4a0d7941b}">
-      <Declaration><![CDATA[METHOD Reset
+      <Declaration><![CDATA[// Reset latched errors
+METHOD Reset
 VAR_INPUT
 END_VAR
 ]]></Declaration>

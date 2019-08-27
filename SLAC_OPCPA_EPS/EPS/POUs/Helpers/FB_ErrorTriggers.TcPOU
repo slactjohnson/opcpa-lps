@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="FB_ErrorTriggers" Id="{03ec90dc-8712-481d-8a9d-9ad9d4cb604c}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_ErrorTriggers
-VAR_INPUT
-END_VAR
+    <Declaration><![CDATA[// Detects rising-edge errors
+FUNCTION_BLOCK FB_ErrorTriggers
 VAR_IN_OUT
-	stErrors : ST_ErrorStates;
+	stErrors : ST_ErrorStates; // Errors that have been detected
 END_VAR
 VAR_OUTPUT
-	stNewErrors : St_ErrorStates;
+	stNewErrors : St_ErrorStates; // Rising-edge errors
 END_VAR
 VAR
+	// R_TRIG function blocks for detecting new errors
 	fbLeakOpticalTableAmphosOnTrig : R_TRIG;
 	fbLeakOpticalTableNoLaserTrig : R_TRIG;
 	fbLeakOpcpaCarbideOnTrig : R_TRIG;
@@ -52,7 +52,8 @@ fbOpcpaBeamTrig(
 );]]></ST>
     </Implementation>
     <Method Name="NewLeakError" Id="{ab5031be-34d4-41d7-8f1c-1e6706b02485}">
-      <Declaration><![CDATA[METHOD NewLeakError : BOOL
+      <Declaration><![CDATA[// Returns whether a rising-edge leak error has occured
+METHOD NewLeakError : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -61,7 +62,8 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="ResetAmphosTrigger" Id="{ef779c79-51d0-48fb-aecc-a3d338593635}">
-      <Declaration><![CDATA[METHOD ResetAmphosTrigger
+      <Declaration><![CDATA[// Reset latched amphos errors
+METHOD ResetAmphosTrigger
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -73,7 +75,8 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="ResetLeakTriggers" Id="{0cf9305f-aad5-4ef8-8c4c-82a427ee3c88}">
-      <Declaration><![CDATA[METHOD ResetLeakTriggers
+      <Declaration><![CDATA[// Reset latched leak errors
+METHOD ResetLeakTriggers
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -102,7 +105,8 @@ fbLeakInsideRacksTrig(
       </Implementation>
     </Method>
     <Method Name="ResetOpcpaTrigger" Id="{ac38f646-b9bb-4388-ba78-0da8d95694e7}">
-      <Declaration><![CDATA[METHOD ResetOpcpaTrigger
+      <Declaration><![CDATA[// Reset latched OPCPA errors
+METHOD ResetOpcpaTrigger
 VAR_INPUT
 END_VAR
 ]]></Declaration>

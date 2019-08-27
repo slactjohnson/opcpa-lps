@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="F_BaseplateChillerEnable" Id="{1364b9de-d1e4-4cd9-be0a-b8eefa4075df}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION F_BaseplateChillerEnable : BOOL
+    <Declaration><![CDATA[// Interlock logic for the Baseplate Chiller
+FUNCTION F_BaseplateChillerEnable : BOOL
 VAR_INPUT
 END_VAR
 VAR_IN_OUT CONSTANT
-	stErrors : ST_ErrorStates;
+	stErrors : ST_ErrorStates; // Currently detected errors
 END_VAR
 VAR
 END_VAR
@@ -13,10 +14,12 @@ END_VAR
     <Implementation>
       <ST><![CDATA[F_BaseplateChillerEnable := FALSE;
 
+// Disable baseplate chiller if there is a hardware failure
 IF stErrors.bHardwareFailure THEN
 	RETURN;
 END_IF
 
+// Disable baseplate chiller if there is a leak under the table
 IF stErrors.bLeakUnderTable THEN
 	RETURN;
 END_IF
@@ -26,8 +29,10 @@ F_BaseplateChillerEnable := TRUE;
     </Implementation>
     <LineIds Name="F_BaseplateChillerEnable">
       <LineId Id="11" Count="0" />
+      <LineId Id="40" Count="0" />
       <LineId Id="28" Count="2" />
       <LineId Id="27" Count="0" />
+      <LineId Id="41" Count="0" />
       <LineId Id="12" Count="5" />
       <LineId Id="7" Count="0" />
     </LineIds>

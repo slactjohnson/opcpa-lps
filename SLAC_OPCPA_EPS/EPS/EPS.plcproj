@@ -81,6 +81,9 @@
     <Compile Include="POUs\Devices\FB_LeakMonitor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_Diagnostics.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Helpers\FB_ErrorTriggers.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -124,6 +127,10 @@
     <PlaceholderReference Include="Tc2_BABasic">
       <DefaultResolution>Tc2_BABasic, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_BABasic</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_EtherCAT">
+      <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_EtherCAT</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_ModbusRTU">
       <DefaultResolution>Tc2_ModbusRTU, * (Beckhoff Automation GmbH)</DefaultResolution>

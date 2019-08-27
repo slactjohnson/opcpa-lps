@@ -1,18 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="F_AmphosShutterEnable" Id="{a7fc5b7f-48ee-48e8-a6f9-0fc0af7200c2}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION F_AmphosShutterEnable : BOOL
+    <Declaration><![CDATA[// Interlock logic for the Amphos shutter
+FUNCTION F_AmphosShutterEnable : BOOL
 VAR_INPUT
-	bAmphosOn : BOOL;
-	fOpcpaVoltage : LREAL;
-	bLoopTempOverride01 : BOOL;
-	bLoopTempOverride02 : BOOL;
-	bLoopTempOverride03 : BOOL;
-	bLoopTempOverride04 : BOOL;
+	bAmphosOn : BOOL; // Whether the amphos is on
+	fOpcpaVoltage : LREAL; // The voltage of the OPCPA
+	bLoopTempOverride01 : BOOL; // Whether the chiller loop error is overriden
+	bLoopTempOverride02 : BOOL; // Whether the chiller loop error is overriden
+	bLoopTempOverride03 : BOOL; // Whether the chiller loop error is overriden
+	bLoopTempOverride04 : BOOL; // Whether the chiller loop error is overriden
 END_VAR
 VAR_IN_OUT CONSTANT
-	stErrors : ST_ErrorStates;
-	stOpcpaSetpoints : ST_LaserSetpoints;
+	stErrors : ST_ErrorStates; // Currently detected errors
+	stOpcpaSetpoints : ST_LaserSetpoints; // OPCPA setpoints
 END_VAR
 VAR
 END_VAR

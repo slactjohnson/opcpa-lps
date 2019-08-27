@@ -3,74 +3,86 @@
   <POU Name="MAIN" Id="{749355aa-8fe6-4a8e-b863-c3c2acf01034}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	stErrors : ST_ErrorStates;
-	fbErrorTriggers : FB_ErrorTriggers;
+	stErrors : ST_ErrorStates; // Keeps track of triggered error states
+	fbErrorTriggers : FB_ErrorTriggers; // Creates triggers when new errors are detected
 	
-	(* Leak Monitor *)
+	// Leak Monitor
 	{attribute 'pytmc' := 'pv: HPO:TTSIM:DEV01'}
-	fbTraceTekModbus : FB_TraceTekModbus;
+	fbTraceTekModbus : FB_TraceTekModbus; // Provides information about leaks through Modbus
 	{attribute 'pytmc' := 'pv: HPO:LPS:LEAK:RESET'}
-	bLeakMonitorReset : BOOL;
+	bLeakMonitorReset : BOOL; // Resets errors on the leak monitor
 	{attribute 'pytmc' := 'pv: HPO:LPS:LEAK'}
-	fbLeakMonitor : FB_LeakMonitor;
+	fbLeakMonitor : FB_LeakMonitor; // Detects leaks
 	
-	(* Loop temperature monitors *)
+	// Chiller Loop temperature monitors
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP01'}
-	fbChillerLoop01 : FB_ChillerLoop;
+	fbChillerLoop01 : FB_ChillerLoop; // Monitors for error events on the chiller loop
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP02'}
-	fbChillerLoop02 : FB_ChillerLoop;
+	fbChillerLoop02 : FB_ChillerLoop; // Monitors for error events on the chiller loop
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP03'}
-	fbChillerLoop03 : FB_ChillerLoop;
+	fbChillerLoop03 : FB_ChillerLoop; // Monitors for error events on the chiller loop
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP04'}
-	fbChillerLoop04 : FB_ChillerLoop;
+	fbChillerLoop04 : FB_ChillerLoop; // Monitors for error events on the chiller loop
 	
-	(* Laser monitors *)
+	// Laser monitors
 	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS'}
-	fbAmphos : FB_Laser;
+	fbAmphos : FB_Laser; // Monitros the Amphos laser
 	{attribute 'pytmc' := '
 		pv: HPO:LPS:AMPHOS:RESET
 		io: io
 	'}
-	bAmphosReset : BOOL;
-
+	bAmphosReset : BOOL; // Unlatches the error state of the Amphos
 	{attribute 'pytmc' := 'pv: HPO:LPS:OPCPA'}
-	fbOpcpa : FB_Laser;
+	fbOpcpa : FB_Laser; // Monitors the OPCPA laser
 	{attribute 'pytmc' := '
 		pv: HPO:LPS:OPCPA:RESET
 		io: io
 	'}
-	bOpcpaReset : BOOL;
+	bOpcpaReset : BOOL; // Unlatches the error state of the OPCPA
 	
-	(* Temperature monitors *)
+	// Temperature monitors
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON01'}
-	fbTempMon01 : FB_TemperatureMonitor;
+	fbTempMon01 : FB_TemperatureMonitor; // Monitors system temperature
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON02'}
-	fbTempMon02 : FB_TemperatureMonitor;
+	fbTempMon02 : FB_TemperatureMonitor; // Monitors system temperature
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON03'}
-	fbTempMon03 : FB_TemperatureMonitor;
+	fbTempMon03 : FB_TemperatureMonitor; // Monitors system temperature
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON04'}
-	fbTempMon04 : FB_TemperatureMonitor;
+	fbTempMon04 : FB_TemperatureMonitor; // Monitors system temperature
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON05'}
-	fbTempMon05 : FB_TemperatureMonitor;
+	fbTempMon05 : FB_TemperatureMonitor; // Monitors system temperature
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON06'}
-	fbTempMon06 : FB_TemperatureMonitor;
+	fbTempMon06 : FB_TemperatureMonitor; // Monitors system temperature
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON07'}
-	fbTempMon07 : FB_TemperatureMonitor;
+	fbTempMon07 : FB_TemperatureMonitor; // Monitors system temperature
 	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON08'}
-	fbTempMon08 : FB_TemperatureMonitor;
+	fbTempMon08 : FB_TemperatureMonitor; // Monitors system temperature
 	
-	fbDumpChiller : FB_DumpChiller;
-	fbBaseplateChiller : FB_BaseplateChiller;
+	// Chillers
+	{attribute 'pytmc' := 'pv: HPO:LPS:DUMP_CHILLER'}
+	fbDumpChiller : FB_DumpChiller; // Flow sensor monitor for the dump chiller
+	{attribute 'pytmc' := 'pv: HPO:LPS:BASEPLATE_CHILLER'}
+	fbBaseplateChiller : FB_BaseplateChiller; // Flow sensor monitor for the baseplate chiller
 	
-	fbAmphosMRC01 : FB_AmphosMRC;
-	fbAmphosMRC02 : FB_AmphosMRC;
-	fbAmphosMRC03 : FB_AmphosMRC;
+	// Amphos MRCs
+	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS_MRC01'}
+	fbAmphosMRC01 : FB_AmphosMRC; // Detects problems with the MRC
+	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS_MRC02'}
+	fbAmphosMRC02 : FB_AmphosMRC; // Detects problems with the MRC
+	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS_MRC03'}
+	fbAmphosMRC03 : FB_AmphosMRC; // Detects problems with the MRC
 	
-	
+	// Diagnostics
+	{attribute 'pytmc' := 'pv: HPO:PLC}
+	fbDiagnostics : Fb_Diagnostics; // Reports Ethercat and PLC diagnostics
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* Get current inputs and measurements and detect errors *)
+      <ST><![CDATA[(* 
+Feed each device function block inputs from the PLC IO. Collect error states detected
+by the function blocks into stErrors. These collected errors are then used later for
+making decisions in the interlock logic.
+*)
 
 fbLeakMonitor(
 	nLocationResistance := fbTraceTekModbus.nLocationResistance,
@@ -86,22 +98,22 @@ fbLeakMonitor(
 );
 
 fbChillerLoop01(
-	bTempSwitch := GVL_IO.bLoopTempSW01,
+	bLoopTempSW := GVL_IO.bLoopTempSW01,
 	bError => stErrors.bChillerLoop01
 );
 
 fbChillerLoop02(
-	bTempSwitch := GVL_IO.bLoopTempSW02,
+	bLoopTempSW := GVL_IO.bLoopTempSW02,
 	bError => stErrors.bChillerLoop02
 );
 
 fbChillerLoop03(
-	bTempSwitch := GVL_IO.bLoopTempSW03,
+	bLoopTempSW := GVL_IO.bLoopTempSW03,
 	bError => stErrors.bChillerLoop03
 );
 
 fbChillerLoop04(
-	bTempSwitch := GVL_IO.bLoopTempSW04,
+	bLoopTempSW := GVL_IO.bLoopTempSW04,
 	bError => stErrors.bChillerLoop04
 );
 
@@ -204,6 +216,11 @@ fbAmphosMRC03(
 	bError => stErrors.bAmphosMRC03
 );
 
+(*
+Now that each of the input signals have been checked and errors stored,
+run the interlock logic. By default all output signals are set to their
+safe-states and are only turned on if all interlock logic passes.
+*)
 
 GVL_IO.bAmphosAttenuatorEnable := F_AmphosAttenuatorEnable(
 	bAmphosOn := GVL_IO.bAmphosOn,
@@ -233,16 +250,22 @@ GVL_IO.bAmphosRelay := F_AmphosEnable(
 	stErrors := stErrors
 );
 
-// Detect leak location
+(*
+Safety related tasks have now been finished. Now try slower tasks such as 
+communicating with external hardware.
+*)
 fbTraceTekModbus(
 	nModbusSlaveAddress := GVL_TraceTek.nModbusSlaveAddress,
 	bLeakDetected := GVL_IO.bLeakDetected,
 	bError => stErrors.bHardwareFailure
 );
 
-// As per the specification, the reset PV is not checked until after the EPS has taken action
+(*
+As per the specification, the reset PV is not checked until after the EPS has taken action.
+Check the reset flags to see if they have been set and the errors can be unlatched.
+*)
 
-// Check for new errors
+// Check for rising-edge errors
 fbErrorTriggers(stErrors := stErrors);
 
 IF fbErrorTriggers.NewLeakError() THEN
@@ -270,6 +293,9 @@ END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="1952" Count="0" />
+      <LineId Id="1956" Count="1" />
+      <LineId Id="1953" Count="0" />
       <LineId Id="1349" Count="5" />
       <LineId Id="1660" Count="0" />
       <LineId Id="1355" Count="29" />
@@ -293,19 +319,28 @@ END_IF
       <LineId Id="1433" Count="5" />
       <LineId Id="1794" Count="0" />
       <LineId Id="1439" Count="30" />
-      <LineId Id="1599" Count="1" />
+      <LineId Id="1962" Count="3" />
+      <LineId Id="1968" Count="0" />
+      <LineId Id="1966" Count="0" />
+      <LineId Id="1600" Count="0" />
       <LineId Id="1473" Count="11" />
       <LineId Id="1697" Count="0" />
       <LineId Id="1485" Count="10" />
       <LineId Id="1698" Count="0" />
       <LineId Id="1496" Count="1" />
-      <LineId Id="1868" Count="1" />
+      <LineId Id="1868" Count="0" />
+      <LineId Id="1969" Count="1" />
+      <LineId Id="1973" Count="0" />
+      <LineId Id="1971" Count="0" />
       <LineId Id="1866" Count="0" />
       <LineId Id="1870" Count="0" />
       <LineId Id="1873" Count="0" />
       <LineId Id="1875" Count="0" />
       <LineId Id="1871" Count="0" />
       <LineId Id="1692" Count="1" />
+      <LineId Id="1974" Count="0" />
+      <LineId Id="1976" Count="0" />
+      <LineId Id="1975" Count="0" />
       <LineId Id="1684" Count="1" />
       <LineId Id="1672" Count="0" />
       <LineId Id="1688" Count="0" />

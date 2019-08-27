@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="F_AmphosAttenuatorEnable" Id="{7ab6d45d-4336-488b-ae1d-ec9e617ae7af}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION F_AmphosAttenuatorEnable : BOOL
+    <Declaration><![CDATA[// Interlock logic for the Amphos attenuator
+FUNCTION F_AmphosAttenuatorEnable : BOOL
 VAR_INPUT
-	bAmphosOn : BOOL;
+	bAmphosOn : BOOL; // Whether the Amphos is turned on
 END_VAR
 VAR_IN_OUT CONSTANT
-	stErrors : ST_ErrorStates;
+	stErrors : ST_ErrorStates; // Currently detected errors
 END_VAR
 VAR
 END_VAR

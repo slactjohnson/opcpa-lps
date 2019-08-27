@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="F_CarbideShutterEnable" Id="{6b2b070e-0295-4d27-a821-90f06b1926e9}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION F_CarbideShutterEnable : BOOL
+    <Declaration><![CDATA[// Interlock logic for the Carbide Shutter
+FUNCTION F_CarbideShutterEnable : BOOL
 VAR_INPUT
 END_VAR
 VAR_IN_OUT CONSTANT
-	stErrors : ST_ErrorStates;
+	stErrors : ST_ErrorStates; // Currently detected errors
 END_VAR
 VAR
 END_VAR
