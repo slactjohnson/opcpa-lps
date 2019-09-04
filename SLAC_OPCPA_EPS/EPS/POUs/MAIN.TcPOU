@@ -72,13 +72,17 @@ VAR
 	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS_MRC03'}
 	fbAmphosMRC03 : FB_AmphosMRC; // Detects problems with the MRC
 	
-	// Diagnostics
-	{attribute 'pytmc' := 'pv: HPO:PLC}
-	fbDiagnostics : Fb_Diagnostics; // Reports Ethercat and PLC diagnostics
+	{attribute 'pytmc' := 'pv: HPO:PLC'}
+	fbDiag : FB_EcatDiag;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* 
+      <ST><![CDATA[(*
+* Update diagnostics. Check for hardware failures
+*)
+fbDiag(AMSNetId := GVL_PLC.AMSNetId, bError => stErrors.bHardwareFailure);
+
+(* 
 Feed each device function block inputs from the PLC IO. Collect error states detected
 by the function blocks into stErrors. These collected errors are then used later for
 making decisions in the interlock logic.
@@ -293,6 +297,8 @@ END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="2079" Count="2" />
+      <LineId Id="2077" Count="1" />
       <LineId Id="1952" Count="0" />
       <LineId Id="1956" Count="1" />
       <LineId Id="1953" Count="0" />
@@ -337,7 +343,8 @@ END_IF
       <LineId Id="1873" Count="0" />
       <LineId Id="1875" Count="0" />
       <LineId Id="1871" Count="0" />
-      <LineId Id="1692" Count="1" />
+      <LineId Id="2057" Count="0" />
+      <LineId Id="1693" Count="0" />
       <LineId Id="1974" Count="0" />
       <LineId Id="1976" Count="0" />
       <LineId Id="1975" Count="0" />

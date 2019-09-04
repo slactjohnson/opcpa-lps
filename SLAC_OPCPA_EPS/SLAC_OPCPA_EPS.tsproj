@@ -27,6 +27,24 @@
 			</Properties>
 		</DataType>
 		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-000000000041}" TcBaseType="true" HideSubItems="true" CName="AmsNetId">AMSNETID</Name>
+			<BitSize>48</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>6</Elements>
+			</ArrayInfo>
+			<Format>
+				<Printf>%d.%d.%d.%d.%d.%d</Printf>
+				<Parameter>[0]</Parameter>
+				<Parameter>[1]</Parameter>
+				<Parameter>[2]</Parameter>
+				<Parameter>[3]</Parameter>
+				<Parameter>[4]</Parameter>
+				<Parameter>[5]</Parameter>
+			</Format>
+		</DataType>
+		<DataType>
 			<Name GUID="{923A5EC4-0BE9-40FE-9AF6-E0B4E41A6685}" Namespace="Tc2_ModbusRTU" AutoDeleteType="true">MB_KL6outData22B</Name>
 			<BitSize>192</BitSize>
 			<SubItem>
@@ -212,6 +230,17 @@
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
+							<Name>GVL_IO.bAmphosOn</Name>
+							<Comment>
+								<![CDATA[ Ch1]]>
+							</Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.fbTraceTekModbus.fbModbusMaster.InData</Name>
+							<Type GUID="{FFB40EE1-BDD3-47FA-80D4-8470FF621D12}" Namespace="Tc2_ModbusRTU">MB_KL6inData22B</Type>
+						</Var>
+						<Var>
 							<Name>GVL_IO.nAmphosVoltageRaw</Name>
 							<Comment>
 								<![CDATA[ Ch1]]>
@@ -280,13 +309,6 @@
 								<![CDATA[ Ch4]]>
 							</Comment>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.bAmphosOn</Name>
-							<Comment>
-								<![CDATA[ Ch1]]>
-							</Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_IO.bLeakDetected</Name>
@@ -366,12 +388,16 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.fbTraceTekModbus.fbModbusMaster.InData</Name>
-							<Type GUID="{FFB40EE1-BDD3-47FA-80D4-8470FF621D12}" Namespace="Tc2_ModbusRTU">MB_KL6inData22B</Type>
+							<Name>GVL_PLC.AMSNetId</Name>
+							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN.fbTraceTekModbus.fbModbusMaster.OutData</Name>
+							<Type GUID="{923A5EC4-0BE9-40FE-9AF6-E0B4E41A6685}" Namespace="Tc2_ModbusRTU">MB_KL6outData22B</Type>
+						</Var>
 						<Var>
 							<Name>GVL_IO.bAmphosAttenuatorEnable</Name>
 							<Comment>
@@ -425,10 +451,6 @@
 								<![CDATA[ Ch3 Amphos Interlock relay]]>
 							</Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.fbTraceTekModbus.fbModbusMaster.OutData</Name>
-							<Type GUID="{923A5EC4-0BE9-40FE-9AF6-E0B4E41A6685}" Namespace="Tc2_ModbusRTU">MB_KL6outData22B</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2019-07-25T17:06:23">
@@ -515,21 +537,21 @@
 										<![CDATA[Bit set when lower value limit exceeded]]>
 									</Comment>
 								</Entry>
-								<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03">
+								<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03" Flags="#x00008020">
 									<Type>BIT2</Type>
 									<Comment>
 										<![CDATA[Bit0: Value greater than Limit1
 Bit1: Value smaller than Limit1]]>
 									</Comment>
 								</Entry>
-								<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05">
+								<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05" Flags="#x00008020">
 									<Type>BIT2</Type>
 									<Comment>
 										<![CDATA[Bit0: Value greater than Limit2
 Bit1: Value smaller than Limit2]]>
 									</Comment>
 								</Entry>
-								<Entry Name="Status__Error" Index="#x6000" Sub="#x07">
+								<Entry Name="Status__Error" Index="#x6000" Sub="#x07" Flags="#x00008020">
 									<Type>BIT</Type>
 									<Comment>
 										<![CDATA[Bit set when Over- or Underrange]]>
@@ -541,7 +563,7 @@ Bit1: Value smaller than Limit2]]>
 								<Entry Name="Status__">
 									<Type GUID="{18071995-0000-0000-0000-002000000005}">ARRAY [0..4] OF BIT</Type>
 								</Entry>
-								<Entry Name="Status__Sync error" Index="#x6000" Sub="#x0e">
+								<Entry Name="Status__Sync error" Index="#x6000" Sub="#x0e" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__TxPDO State" Index="#x6000" Sub="#x0f">
@@ -6582,7 +6604,11 @@ Bit1: Value smaller than Limit2]]>
 	</Project>
 	<Mappings>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500820000403}" Id="#x02030020"/>
 		<OwnerA Name="TIPC^EPS^EPS Instance">
+			<OwnerB Name="TIID^CX2020 (EtherCAT)">
+				<Link VarA="PlcTask Inputs^GVL_PLC.AMSNetId" VarB="InfoData^AmsNetId"/>
+			</OwnerB>
 			<OwnerB Name="TIID^CX2020 (EtherCAT)^Term 1 (EK1200)^Term 7 (EL2624)">
 				<Link VarA="PlcTask Outputs^GVL_IO.bAmphosRelay" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.bBaseplateChillerRelay" VarB="Channel 2^Output"/>

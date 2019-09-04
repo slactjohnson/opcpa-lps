@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <DUT Name="E_DeviceState" Id="{75ab7b75-6632-4b70-ac1a-e6759efe951a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+TYPE E_DeviceState :
+(
+	INVALID := 0,
+	INIT := EC_DEVICE_STATE_INIT,
+	PREOP := EC_DEVICE_STATE_PREOP,
+	BOOTSTRAP := EC_DEVICE_STATE_BOOTSTRAP,
+	SAFEOP := EC_DEVICE_STATE_SAFEOP,
+	OP := EC_DEVICE_STATE_OP
+) := INVALID;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -22,6 +22,12 @@
     <Compile Include="DUTs\E_LeakLocation.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\E_DeviceState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_DeviceDiagnostic.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\ST_ErrorStates.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -33,6 +39,10 @@
     </Compile>
     <Compile Include="DUTs\ST_TemperatureMonitorSetpoints.TcDUT">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\GVL_PLC.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="GVLs\GVL_Laser.TcGVL">
       <SubType>Code</SubType>
@@ -81,7 +91,7 @@
     <Compile Include="POUs\Devices\FB_LeakMonitor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_Diagnostics.TcPOU">
+    <Compile Include="POUs\Diagnostics\FB_EcatDiag.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Helpers\FB_ErrorTriggers.TcPOU">
@@ -119,6 +129,7 @@
     <Folder Include="POUs\Devices" />
     <Folder Include="POUs\Communication" />
     <Folder Include="POUs\Helpers" />
+    <Folder Include="POUs\Diagnostics" />
     <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
@@ -131,6 +142,10 @@
     <PlaceholderReference Include="Tc2_EtherCAT">
       <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_EtherCAT</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_MDP">
+      <DefaultResolution>Tc2_MDP, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_MDP</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_ModbusRTU">
       <DefaultResolution>Tc2_ModbusRTU, * (Beckhoff Automation GmbH)</DefaultResolution>

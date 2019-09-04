@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <DUT Name="ST_DeviceDiagnostic" Id="{652fbb9e-ae98-481e-97a0-ceaca5f1c30d}">
+    <Declaration><![CDATA[TYPE ST_DeviceDiagnostic :
+STRUCT
+	{attribute 'pytmc' := '
+		pv: TYPE
+		io: i
+	'}
+	sType : STRING[15];
+	{attribute 'pytmc' := '
+		pv: ADDRESS
+		io: i
+	'}
+	nAddr : WORD;
+	{attribute 'pytmc' := '
+		pv: NAME
+		io: i
+	'}
+	sName : STRING[31];
+	{attribute 'pytmc' := '
+		pv: DEVICE_STATE
+		io: i
+		field: ZRVL 0
+		field: ONVL 1
+		field: TWVL 2
+		field: THVL 3
+		field: FRVL 4
+		field: SXVL	8
+		field: ZRST INVALID
+		field: ONST INIT
+		field: TWST PREOP
+		field: THST BOOTSTRAP
+		field: FRST SAFEOP
+		field: SXST OP
+		field: ZRSV MAJOR
+		field: ONSV MINOR
+		field: TWSV MINOR
+		field: THSV MINOR
+		field: FRSV MINOR
+		field: FVSV MINOR
+		field: SXSV NO_ALARM
+		field: UNSV MAJOR
+	'}
+	eDeviceState : E_DeviceState;
+	{attribute 'pytmc' := '
+		pv: DEVICE_STATE_FLAGS
+		io: i
+	'}
+	nDeviceStateFlags : BYTE;
+	{attribute 'pytmc' := '
+		pv: LINK_STATE_FLAGS
+		io: i
+	'}
+	nLinkStateFlags : BYTE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

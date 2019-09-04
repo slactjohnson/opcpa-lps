@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <DUT Name="ST_PLCDiagnostic" Id="{3ad312cf-1eed-431a-bd1b-9d8ca5f40db1}">
+    <Declaration><![CDATA[TYPE ST_PLCDiagnostic :
+STRUCT
+	// Diagnostics
+	AMSNetId AT %I* : AMSNETID;
+	nPLCDeviceState AT %I* : UINT;
+	
+	(* Slot1 EL3174 *)
+	nSlotState01 AT %I* : UINT;
+	
+	(* Slot2 EL3174 *)
+	nSlotState02 AT %I* : UINT;
+	
+	(* Slot3 EL9189 *)
+	
+	(* Slot4 EL3174 *)
+	nSlotState04 AT %I* : UINT;
+	
+	(* Slot5 EL3174 *)
+	nSlotState05 AT %I* : UINT;
+	
+	(* Slot6 EL1259 *)
+	nSlotState06 AT %I* : UINT;
+
+	(* Slot7 EL9184 *)
+	
+	(* Slot8 EL1259 *)
+	nSlotState08 AT %I* : UINT;
+	
+	(* Slot9 EL9184 *)
+	
+	(* Slot10 ES2624 *)
+	nSlotState10 AT %I* : UINT;
+	
+	(* Slot11 EL6022 *)
+	nSlotState11 AT %I* : UINT;
+	
+	(* Slot12 EL9505 *)
+	nSlotState12 AT %I* : UINT;
+	
+	(* Slot13 EL1124 *)
+	nSlotState13 AT %I* : UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

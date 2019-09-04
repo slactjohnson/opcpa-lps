@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_EcatDiag" Id="{43d66d8e-1ebd-4497-a067-55989bf5e1a3}" SpecialFunc="None">
+    <Declaration><![CDATA[(*
+Ecat bus diagnostic tool
+2015-11-4 Alex Wallace
+This function block checks the states of all slaves on the ecat bus network, 
+it could be modified to export the states of the slaves on an individual basis,
+but for now it sets the output boolean true if all slaves are OP and false otherwise.
+To start the block provide a falling edge on the first pass boolean input.
+
+2018-05-05 Margaret Ghaly
+Function block has been modified to retrieve the Device State of the Ethercat Master.
+It also exports the states and information of each individual configured Slave. 
+And saves them in the array q_aEcConfSlaveInfo.
+
+2019-08-28 Nathan Telles
+Customized for EPS project using PyTMC. Export all states to a structure which is
+linked to EPICS records. Remove unecessary diagnostics.
+*)
+{attribute 'call_after_init'}
+FUNCTION_BLOCK FB_EcatDiag
+VAR_INPUT
+	{attribute 'naming' := 'omit'}
+	AMSNetId : AMSNETID; //Link to the AMSNETID name in the ethercat master info.
+	//i_xFirstPass: BOOL; //Hook to system first pass boolean for proper intialization (must be true for the first cycle of the PLC)
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+	'}
+	bError : BOOL;
+	{attribute 'pytmc' := '
+		pv: SLAVES_OK
+		io: i
+	'}
+	bAllSlaveStatesGood: BOOL; // Set to True if all Slaves are in OP State
+	{attribute 'pytmc' := '
+		pv: MASTER_OK
+		io: i
+	'}
+	bMasterStateGood : BOOL;
+END_VAR
+VAR	
+	{attribute 'pytmc' := '
+		pv: MASTER_DEV_STATE
+		io: i
+	'}
+	nMasterDevState: WORD; // The Device State of the Master
+	{attribute 'pytmc' := '
+		pv: MASTER_STATE
+		io: i
+	'}
+	nMasterState: WORD; // The Device State of the Master
+	{attribute 'pytmc' := '
+		pv: AMS_ID
+		io: i
+	'}
+	sNetId: STRING(23); //NetId string
+	
+	astTermStates: ARRAY[1..MAX_SLAVES] OF ST_EcSlaveState; //ECAT Slave States Buffer
+	astEcConfSlaveInfo: ARRAY[1..MAX_SLAVES] OF ST_EcSlaveConfigData; //ECAT Slave Configs Buffer
+	
+	fbGetAllSlaveStates: FB_EcGetAllSlaveStates; //Acquires the ECAT Slave States puts them into astTermStates 
+	fbGetMasterDevState: FB_EcGetMasterDevState; //Acquires ECAT Master State
+	fbGetMasterState: FB_EcGetMasterState; //Acquires ECAT Master State
+	fbGetConfSlaves: FB_EcGetConfSlaves; //Acquires the ECAT slave configuration of the bus (how many, what kind, etc)
+	
+	{attribute 'naming' := 'omit'} 
+	ftReset: F_TRIG; //Reset trigger sensor
+	{attribute 'naming' := 'omit'}
+	ftMasterDevReset: F_TRIG; //Retrigger sensor for GetMasterDevState
+	{attribute 'naming' := 'omit'}
+	ftMasterReset: F_TRIG; //Retrigger sensor for GetMasterState
+	
+	{attribute 'pytmc' := 'pv: SLAVE01'}
+	stSlave01 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE02'}
+	stSlave02 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE03'}
+	stSlave03 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE04'}
+	stSlave04 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE05'}
+	stSlave05 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE06'}
+	stSlave06 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE07'}
+	stSlave07 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE08'}
+	stSlave08 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE09'}
+	stSlave09 : ST_DeviceDiagnostic;
+	{attribute 'pytmc' := 'pv: SLAVE10'}
+	stSlave10 : ST_DeviceDiagnostic;
+	
+	aSlaves : ARRAY [1..MAX_SLAVES] OF POINTER TO ST_DeviceDiagnostic := [ADR(stSlave01),ADR(stSlave02),
+		ADR(stSlave03),ADR(stSlave04),ADR(stSlave05),ADR(stSlave06),ADR(stSlave07),ADR(stSlave08),
+		ADR(stSlave09), ADR(stSlave10)];
+		
+	nIterator: UINT;
+	bInit : BOOL := TRUE;
+
+	{attribute 'pytmc' := '
+		pv: SLAVES_COUNT
+		io: i
+	'}
+	nSlaves : UINT;
+END_VAR
+VAR CONSTANT
+	MAX_SLAVES : UINT := 10;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[sNetId := F_CreateAmsNetId(AMSNetId);
+
+//Query the state of all terminals, collect in astTermStates
+ftReset(CLK:=fbGetAllSlaveStates.bBusy OR bInit);
+fbGetAllSlaveStates.bExecute := ftReset.Q;
+fbGetAllSlaveStates(sNetId:=sNetId, pStateBuf := ADR(astTermStates), cbBufLen:=SIZEOF(astTermStates));
+//Keep checking...
+
+
+//Cycle through each entry in the array and check if we have anyone not in OP and that the link state is good.
+// If so, then set our global IO bad boolean.
+IF fbGetAllSlaveStates.nSlaves > 0 THEN
+	bAllSlaveStatesGood := TRUE;
+	FOR nIterator := 1 TO MIN(MAX_SLAVES, fbGetAllSlaveStates.nSlaves) BY 1 DO
+		IF NOT( (astTermStates[nIterator].deviceState = EC_DEVICE_STATE_OP) AND (astTermStates[nIterator].linkState = EC_LINK_STATE_OK)) THEN
+			bAllSlaveStatesGood := FALSE;
+		END_IF
+		aSlaves[nIterator]^.eDeviceState := astTermStates[nIterator].deviceState AND EC_DEVICE_STATE_MASK;
+		aSlaves[nIterator]^.nDeviceStateFlags := SHR(astTermStates[nIterator].deviceState, 4);
+		aSlaves[nIterator]^.nLinkStateFlags :=astTermStates[nIterator].linkState;
+	END_FOR
+END_IF
+
+// Read the EtherCAT state of the master. If the call is successful, 
+//the State output variable of type WORD contains the requested status information.
+ftMasterDevReset(CLK:=fbGetMasterDevState.bBusy OR bInit);
+fbGetMasterDevState(sNetId:= sNetId, bExecute:=ftMasterDevReset.Q, nDevState => nMasterDevState);
+
+ftMasterReset(CLK:=fbGetMasterState.bBusy OR bInit);
+fbGetMasterState(sNetId:= sNetId, bExecute:=ftMasterDevReset.Q, state => nMasterState);
+
+bMasterStateGood:= (fbGetMasterState.state = BYTE_TO_UINT(EC_DEVICE_STATE_OP) AND fbGetMasterDevState.nDevState = 0);
+
+//This function is used to read a list of all configured slaves from the EtherCat master object Directory
+//needs to run only once
+fbGetConfSlaves(bExecute := bInit, sNetId :=sNetId, pArrEcConfSlaveInfo := ADR(astEcConfSlaveInfo),cbBufLen := SIZEOF(astEcConfSlaveInfo));
+nSlaves:=fbGetConfSlaves.nSlaves;
+
+IF  NOT (fbGetConfSlaves.bBusy) THEN
+	FOR nIterator := 1 TO MIN(MAX_SLAVES, fbGetConfSlaves.nSlaves) BY 1 DO
+		aSlaves[nIterator]^.nAddr :=astEcConfSlaveInfo[nIterator].nAddr;
+		aSlaves[nIterator]^.sName :=astEcConfSlaveInfo[nIterator].sName;
+		aSlaves[nIterator]^.sType :=astEcConfSlaveInfo[nIterator].sType;
+	END_FOR
+	fbGetConfSlaves.bExecute := FALSE;
+END_IF
+
+
+bInit := FALSE;
+bError := fbGetMasterDevState.bError OR fbGetMasterState.bError OR fbGetAllSlaveStates.bError OR 
+	fbGetConfSlaves.bError OR NOT bAllSlaveStatesGood OR NOT bMasterStateGood;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_EcatDiag">
+      <LineId Id="381" Count="12" />
+      <LineId Id="395" Count="5" />
+      <LineId Id="403" Count="1" />
+      <LineId Id="429" Count="4" />
+      <LineId Id="528" Count="1" />
+      <LineId Id="534" Count="0" />
+      <LineId Id="530" Count="0" />
+      <LineId Id="436" Count="0" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="439" Count="3" />
+      <LineId Id="419" Count="0" />
+      <LineId Id="444" Count="1" />
+      <LineId Id="447" Count="6" />
+      <LineId Id="426" Count="2" />
+      <LineId Id="553" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
