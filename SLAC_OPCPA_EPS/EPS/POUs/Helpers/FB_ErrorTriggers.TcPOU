@@ -3,7 +3,10 @@
   <POU Name="FB_ErrorTriggers" Id="{03ec90dc-8712-481d-8a9d-9ad9d4cb604c}" SpecialFunc="None">
     <Declaration><![CDATA[// Detects rising-edge errors
 FUNCTION_BLOCK FB_ErrorTriggers
-VAR_IN_OUT
+VAR_INPUT
+	nLeakLocations : BYTE;
+END_VAR
+VAR_IN_OUT CONSTANT
 	stErrors : ST_ErrorStates; // Errors that have been detected
 END_VAR
 VAR_OUTPUT
@@ -11,6 +14,7 @@ VAR_OUTPUT
 END_VAR
 VAR
 	// R_TRIG function blocks for detecting new errors
+	fbLeakTrig : R_TRIG;
 	fbLeakOpticalTableAmphosOnTrig : R_TRIG;
 	fbLeakOpticalTableNoLaserTrig : R_TRIG;
 	fbLeakOpcpaCarbideOnTrig : R_TRIG;
@@ -18,10 +22,15 @@ VAR
 	fbLeakInsideRacksTrig : R_TRIG;
 	fbAmphosBeamTrig : R_TRIG;
 	fbOpcpaBeamTrig : R_TRIG;
+	fbDumpChillerTrig : R_TRIG;
+	fbBaseplateChillerTrig : R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbLeakOpticalTableAmphosOnTrig(
+      <ST><![CDATA[fbLeakTrig(
+	CLK := nLeakLocations <> E_LeakLocation.NO_LEAK,
+);
+fbLeakOpticalTableAmphosOnTrig(
 	CLK := stErrors.bLeakOpticalTableAmphosOn,
 	Q => stNewErrors.bLeakOpticalTableAmphosOn
 );
@@ -49,6 +58,15 @@ fbAmphosBeamTrig(
 fbOpcpaBeamTrig(
 	CLK := stErrors.bOpcpaBeam,
 	Q => stNewErrors.bOpcpaBeam
+);
+
+fbDumpChillerTrig(
+	CLK := stErrors.bDumpChiller,
+	Q => stNewErrors.bDumpChiller
+);
+fbBaseplateChillerTrig(
+	CLK := stErrors.bBaseplateChiller,
+	Q => stNewErrors.bBaseplateChiller
 );]]></ST>
     </Implementation>
     <Method Name="NewLeakError" Id="{ab5031be-34d4-41d7-8f1c-1e6706b02485}">
@@ -58,7 +76,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[NewLeakError := fbLeakOpticalTableAmphosOnTrig.Q OR fbLeakOpticalTableNoLaserTrig.Q OR fbLeakOpcpaCarbideOnTrig.Q OR fbLeakUnderTableTrig.Q OR fbLeakInsideRacksTrig.Q;]]></ST>
+        <ST><![CDATA[NewLeakError := fbLeakTrig.Q OR fbLeakOpticalTableAmphosOnTrig.Q OR fbLeakOpticalTableNoLaserTrig.Q OR fbLeakOpcpaCarbideOnTrig.Q OR fbLeakUnderTableTrig.Q OR fbLeakInsideRacksTrig.Q;]]></ST>
       </Implementation>
     </Method>
     <Method Name="ResetAmphosTrigger" Id="{ef779c79-51d0-48fb-aecc-a3d338593635}">
@@ -72,6 +90,31 @@ END_VAR
 	CLK := FALSE,
 	Q => stNewErrors.bAmphosBeam
 );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetBaseplateChillerTrigger" Id="{5eeafa6d-3fc7-4559-abea-6ee754294cb1}">
+      <Declaration><![CDATA[METHOD ResetBaseplateChillerTrigger
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbBaseplateChillerTrig(
+	CLK := FALSE,
+	Q => stNewErrors.bBaseplateChiller
+);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetDumpChillerTrigger" Id="{0e6a8265-2036-4d41-8243-aa7c141a7304}">
+      <Declaration><![CDATA[METHOD ResetDumpChillerTrigger
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbDumpChillerTrig(
+	CLK := FALSE,
+	Q => stNewErrors.bDumpChiller
+);
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="ResetLeakTriggers" Id="{0cf9305f-aad5-4ef8-8c4c-82a427ee3c88}">
@@ -118,6 +161,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_ErrorTriggers">
+      <LineId Id="117" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="116" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="37" Count="0" />
       <LineId Id="36" Count="0" />
@@ -140,6 +186,7 @@ END_VAR
       <LineId Id="28" Count="0" />
       <LineId Id="54" Count="4" />
       <LineId Id="60" Count="2" />
+      <LineId Id="83" Count="8" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_ErrorTriggers.NewLeakError">
@@ -147,6 +194,14 @@ END_VAR
     </LineIds>
     <LineIds Name="FB_ErrorTriggers.ResetAmphosTrigger">
       <LineId Id="6" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ErrorTriggers.ResetBaseplateChillerTrigger">
+      <LineId Id="6" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ErrorTriggers.ResetDumpChillerTrigger">
+      <LineId Id="6" Count="3" />
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_ErrorTriggers.ResetLeakTriggers">

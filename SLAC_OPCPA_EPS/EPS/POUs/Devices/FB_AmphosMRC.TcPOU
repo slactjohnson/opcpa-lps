@@ -22,10 +22,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[bError := bAmphosOn AND NOT bMRC;
+      <ST><![CDATA[(* Set error flag if amphos is on and the MRC has an error *)
+bError := bAmphosOn AND NOT bMRC;
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_AmphosMRC">
+      <LineId Id="47" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>

@@ -1,65 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <DUT Name="ST_LeakBoundaries" Id="{984a6730-ff5d-4e76-ab98-a071061d040f}">
-    <Declaration><![CDATA[TYPE ST_LeakBoundaries :
+    <Declaration><![CDATA[// Boundaries indicating leak monitor locations
+TYPE ST_LeakBoundaries :
 STRUCT
 	{attribute 'pytmc' := '
-		pv: L_MIN1
+		pv: L_MIN01
 		io: io
 	'}
 	nLMin1 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MAX1
+		pv: L_MAX01
 		io: io
 	'}
 	nLMax1 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MIN2
+		pv: L_MIN02
 		io: io
 	'}
 	nLMin2 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MAX2
+		pv: L_MAX02
 		io: io
 	'}
 	nLMax2 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MIN3
+		pv: L_MIN03
 		io: io
 	'}
 	nLMin3 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MAX3
+		pv: L_MAX03
 		io: io
 	'}
 	nLMax3 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MIN4
+		pv: L_MIN04
 		io: io
 	'}
 	nLMin4 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MAX4
+		pv: L_MAX04
 		io: io
 	'}
 	nLMax4 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MIN5
+		pv: L_MIN05
 		io: io
 	'}
 	nLMin5 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MAX5
+		pv: L_MAX05
 		io: io
 	'}
 	nLMax5 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MIN6
+		pv: L_MIN06
 		io: io
 	'}
 	nLMin6 : UINT;
 	{attribute 'pytmc' := '
-		pv: L_MAX6
+		pv: L_MAX06
 		io: io
 	'}
 	nLMax6 : UINT;

@@ -19,59 +19,35 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Start with closing the shutter as the default behavior
-F_AmphosShutterEnable := FALSE;
-
-// Close shutter if there is a hardware failure
-IF stErrors.bHardwareFailure THEN
-	RETURN;
+      <ST><![CDATA[IF stErrors.bHardwareFailure // Close shutter if there is a hardware failure
+	OR stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable // Close shutter if there is a leak on the optical table with the amphos on, a leak under the table, or a leak inside the OPCPA with Carbide on
+	OR bAmphosOn AND (
+		(NOT bLoopTempOverride01 AND stErrors.bChillerLoop01) OR 
+		(NOT bLoopTempOverride02 AND stErrors.bChillerLoop02) OR 
+		(NOT bLoopTempOverride03 AND stErrors.bChillerLoop03) OR 
+		(NOT bLoopTempOverride04 AND stErrors.bChillerLoop04)) // Close shutter if the amphos is on and the temperature is too high in any loop. Ignore if operator override is enabled
+	OR fOpcpaVoltage < stOpcpaSetpoints.nMinVoltage AND stErrors.bOpcpaBeam // Close shutter if in OPCPA beam error state and OPCPA voltage too low
+	OR stErrors.bTempMon01 OR stErrors.bTempMon02 OR stErrors.bTempMon03 OR stErrors.bTempMon04 OR stErrors.bTempMon05 OR 
+		stErrors.bTempMon06 OR stErrors.bTempMon07 OR stErrors.bTempMon08 // Close shutter if temperature too high at any monitor location
+	OR stErrors.bDumpChiller // Close shutter if there is a Dump Chiller error
+	OR stErrors.bAmphosMRC02 OR stErrors.bAmphosMRC03 // Close shutter if there are errors on the additional MRCs
+THEN
+	F_AmphosShutterEnable := FALSE;
+ELSE
+	F_AmphosShutterEnable := TRUE;
 END_IF
-
-// Close shutter if there is a leak on the optical table with the amphos on, a leak under the table, or a leak inside the OPCPA with Carbide on
-IF stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable THEN
-	RETURN;
-END_IF
-
-// Close shutter if the amphos is on and the temperature is too high in any loop. Ignore if operator override is enabled
-IF bAmphosOn AND (
-(NOT bLoopTempOverride01 AND stErrors.bChillerLoop01) OR 
-(NOT bLoopTempOverride02 AND stErrors.bChillerLoop02) OR 
-(NOT bLoopTempOverride03 AND stErrors.bChillerLoop03) OR 
-(NOT bLoopTempOverride04 AND stErrors.bChillerLoop04)) THEN
-	RETURN;
-END_IF
-
-// Close shutter if in OPCPA beam error state and OPCPA voltage too low
-IF fOpcpaVoltage < stOpcpaSetpoints.nMinVoltage AND stErrors.bOpcpaBeam THEN
-	RETURN;
-END_IF
-
-// Close shutter if temperature too high at any monitor location
-IF stErrors.bTempMon01 OR stErrors.bTempMon02 OR stErrors.bTempMon03 OR stErrors.bTempMon04 OR stErrors.bTempMon05 OR 
-stErrors.bTempMon06 OR stErrors.bTempMon07 OR stErrors.bTempMon08 THEN
-	RETURN;
-END_IF
-	
-// Close shutter if there is a Dump Chiller error
-IF stErrors.bDumpChiller THEN
-	RETURN;
-END_IF
-
-// Close shutter if there are errors on the additional MRCs
-IF stErrors.bAmphosMRC02 OR stErrors.bAmphosMRC03 THEN
-	RETURN;
-END_IF
-
-// Enable shutter control
-F_AmphosShutterEnable := TRUE;
 ]]></ST>
     </Implementation>
     <LineIds Name="F_AmphosShutterEnable">
-      <LineId Id="336" Count="1" />
-      <LineId Id="391" Count="0" />
-      <LineId Id="393" Count="2" />
-      <LineId Id="392" Count="0" />
-      <LineId Id="338" Count="37" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="592" Count="0" />
+      <LineId Id="597" Count="4" />
+      <LineId Id="603" Count="3" />
+      <LineId Id="596" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="594" Count="1" />
+      <LineId Id="395" Count="0" />
+      <LineId Id="607" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>
   </POU>

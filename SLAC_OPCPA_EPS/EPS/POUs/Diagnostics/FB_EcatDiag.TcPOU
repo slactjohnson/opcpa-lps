@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_EcatDiag" Id="{43d66d8e-1ebd-4497-a067-55989bf5e1a3}" SpecialFunc="None">
     <Declaration><![CDATA[(*
 Ecat bus diagnostic tool
@@ -29,16 +29,28 @@ VAR_OUTPUT
 	{attribute 'pytmc' := '
 		pv: ERROR
 		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
 	'}
 	bError : BOOL;
 	{attribute 'pytmc' := '
 		pv: SLAVES_OK
 		io: i
+		field: OSV NO_ALARM
+		field: ZSV MAJOR
+		field: ZNAM ERROR
+		field: ONAM OK
 	'}
 	bAllSlaveStatesGood: BOOL; // Set to True if all Slaves are in OP State
 	{attribute 'pytmc' := '
 		pv: MASTER_OK
 		io: i
+		field: OSV NO_ALARM
+		field: ZSV MAJOR
+		field: ZNAM ERROR
+		field: ONAM OK
 	'}
 	bMasterStateGood : BOOL;
 END_VAR
@@ -52,7 +64,7 @@ VAR
 		pv: MASTER_STATE
 		io: i
 	'}
-	nMasterState: WORD; // The Device State of the Master
+	nMasterState: WORD; // The State of the Master
 	{attribute 'pytmc' := '
 		pv: AMS_ID
 		io: i
@@ -126,13 +138,21 @@ fbGetAllSlaveStates(sNetId:=sNetId, pStateBuf := ADR(astTermStates), cbBufLen:=S
 // If so, then set our global IO bad boolean.
 IF fbGetAllSlaveStates.nSlaves > 0 THEN
 	bAllSlaveStatesGood := TRUE;
-	FOR nIterator := 1 TO MIN(MAX_SLAVES, fbGetAllSlaveStates.nSlaves) BY 1 DO
-		IF NOT( (astTermStates[nIterator].deviceState = EC_DEVICE_STATE_OP) AND (astTermStates[nIterator].linkState = EC_LINK_STATE_OK)) THEN
+	FOR nIterator := 1 TO MAX_SLAVES DO
+		IF nIterator > fbGetAllSlaveStates.nSlaves // Slave is missing
+		OR NOT( (astTermStates[nIterator].deviceState = EC_DEVICE_STATE_OP) AND (astTermStates[nIterator].linkState = EC_LINK_STATE_OK)) 
+		THEN
 			bAllSlaveStatesGood := FALSE;
 		END_IF
-		aSlaves[nIterator]^.eDeviceState := astTermStates[nIterator].deviceState AND EC_DEVICE_STATE_MASK;
-		aSlaves[nIterator]^.nDeviceStateFlags := SHR(astTermStates[nIterator].deviceState, 4);
-		aSlaves[nIterator]^.nLinkStateFlags :=astTermStates[nIterator].linkState;
+		
+		IF nIterator <= fbGetAllSlaveStates.nSlaves THEN
+			aSlaves[nIterator]^.nDeviceState := astTermStates[nIterator].deviceState AND EC_DEVICE_STATE_MASK;
+			aSlaves[nIterator]^.nDeviceStateFlags := SHR(astTermStates[nIterator].deviceState, 4);
+			aSlaves[nIterator]^.nLinkStateFlags :=astTermStates[nIterator].linkState;
+		ELSE
+			// Missing slaves should be set to invalid
+			aSlaves[nIterator]^.nDeviceState := E_DeviceState.INVALID;
+		END_IF
 	END_FOR
 END_IF
 
@@ -152,10 +172,16 @@ fbGetConfSlaves(bExecute := bInit, sNetId :=sNetId, pArrEcConfSlaveInfo := ADR(a
 nSlaves:=fbGetConfSlaves.nSlaves;
 
 IF  NOT (fbGetConfSlaves.bBusy) THEN
-	FOR nIterator := 1 TO MIN(MAX_SLAVES, fbGetConfSlaves.nSlaves) BY 1 DO
-		aSlaves[nIterator]^.nAddr :=astEcConfSlaveInfo[nIterator].nAddr;
-		aSlaves[nIterator]^.sName :=astEcConfSlaveInfo[nIterator].sName;
-		aSlaves[nIterator]^.sType :=astEcConfSlaveInfo[nIterator].sType;
+	FOR nIterator := 1 TO MIN(MAX_SLAVES, fbGetConfSlaves.nSlaves) DO
+		IF nIterator > fbGetConfSlaves.nSlaves THEN // Missing terminal
+			aSlaves[nIterator]^.nAddr := 0;
+			aSlaves[nIterator]^.sName := '';
+			aSlaves[nIterator]^.sType := '';
+		ELSE
+			aSlaves[nIterator]^.nAddr :=astEcConfSlaveInfo[nIterator].nAddr;
+			aSlaves[nIterator]^.sName :=astEcConfSlaveInfo[nIterator].sName;
+			aSlaves[nIterator]^.sType :=astEcConfSlaveInfo[nIterator].sType;
+		END_IF
 	END_FOR
 	fbGetConfSlaves.bExecute := FALSE;
 END_IF
@@ -167,8 +193,18 @@ bError := fbGetMasterDevState.bError OR fbGetMasterState.bError OR fbGetAllSlave
     </Implementation>
     <LineIds Name="FB_EcatDiag">
       <LineId Id="381" Count="12" />
-      <LineId Id="395" Count="5" />
-      <LineId Id="403" Count="1" />
+      <LineId Id="395" Count="0" />
+      <LineId Id="685" Count="0" />
+      <LineId Id="694" Count="1" />
+      <LineId Id="397" Count="1" />
+      <LineId Id="691" Count="1" />
+      <LineId Id="399" Count="1" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="698" Count="0" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="690" Count="0" />
+      <LineId Id="404" Count="0" />
       <LineId Id="429" Count="4" />
       <LineId Id="528" Count="1" />
       <LineId Id="534" Count="0" />
@@ -178,7 +214,14 @@ bError := fbGetMasterDevState.bError OR fbGetMasterState.bError OR fbGetAllSlave
       <LineId Id="439" Count="3" />
       <LineId Id="419" Count="0" />
       <LineId Id="444" Count="1" />
-      <LineId Id="447" Count="6" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="699" Count="0" />
+      <LineId Id="705" Count="2" />
+      <LineId Id="700" Count="0" />
+      <LineId Id="703" Count="1" />
+      <LineId Id="702" Count="0" />
+      <LineId Id="701" Count="0" />
+      <LineId Id="451" Count="2" />
       <LineId Id="426" Count="2" />
       <LineId Id="553" Count="0" />
       <LineId Id="9" Count="0" />

@@ -22,7 +22,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF bAmphosOn AND NOT bDumpChillerFlow THEN
+      <ST><![CDATA[(* Latch error if the dump chiller flow detects an error and the amphos is on *)
+IF bAmphosOn AND NOT bDumpChillerFlow THEN
 	bError := TRUE;
 END_IF]]></ST>
     </Implementation>
@@ -37,6 +38,7 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_DumpChiller">
+      <LineId Id="39" Count="0" />
       <LineId Id="18" Count="1" />
       <LineId Id="9" Count="0" />
     </LineIds>

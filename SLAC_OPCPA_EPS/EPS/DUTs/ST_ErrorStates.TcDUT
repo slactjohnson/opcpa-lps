@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <DUT Name="ST_ErrorStates" Id="{01fc80e0-e88b-4244-badd-6975c9c0b2a0}">
-    <Declaration><![CDATA[TYPE ST_ErrorStates :
+    <Declaration><![CDATA[// Error states that can occur in the program
+TYPE ST_ErrorStates :
 STRUCT
 	// Leak Alarms
 	bLeakOpticalTableAmphosOn : BOOL; // Leak on the optical table with Amphos on

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_LeakMonitor" Id="{e43e7b93-d8f6-4d91-924b-e9e5b24db374}" SpecialFunc="None">
     <Declaration><![CDATA[// Detect leaks and leak locations
 FUNCTION_BLOCK FB_LeakMonitor
@@ -10,9 +10,14 @@ VAR_INPUT
 	nLocationResistance: UINT; // Used for calculating the location of the leak
 END_VAR
 VAR_IN_OUT CONSTANT
-	stBoundaries : ST_LeakBoundaries; // Setpoints for calculating leak locations from location resistance
+	stBound : ST_LeakBoundaries; // Setpoints for calculating leak locations from location resistance
 END_VAR
 VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: LEAKS
+		io: i
+	'}
+	nLeakLocations : BYTE := E_LeakLocation.NO_LEAK; // Locations of leaks
 	{attribute 'pytmc' := '
 		pv: LOTAO_ERROR
 		io: i
@@ -59,39 +64,46 @@ VAR_OUTPUT
 	'}
 	bLeakInsideRacks : BOOL := FALSE; // Leak inside the racks
 END_VAR
-VAR
-	{attribute 'pytmc' := '
-		pv: LOC
-		io: i
-	'}
-	eLeakLocation : E_LeakLocation := E_LeakLocation.NoLeak; // Location of the leak
-END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// If there is a leak, detect the location of the leak and latch the error
-IF bLeakDetected THEN
-	IF stBoundaries.nLMin1 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax4 THEN
+      <ST><![CDATA[IF bLeakDetected THEN
+	(* Find leak location for PV. Stays until reset *)
+	IF stBound.nLMin1 <= nLocationResistance AND nLocationResistance < stBound.nLMax1 THEN
+		nLeakLocations := nLeakLocations OR E_LeakLocation.LOC1;
+	ELSIF stBound.nLMin2 <= nLocationResistance AND nLocationResistance < stBound.nLMax2 THEN
+		nLeakLocations := nLeakLocations OR E_LeakLocation.LOC2;
+	ELSIF stBound.nLMin3 <= nLocationResistance AND nLocationResistance < stBound.nLMax3 THEN
+		nLeakLocations := nLeakLocations OR E_LeakLocation.LOC3;
+	ELSIF stBound.nLMin4 <= nLocationResistance AND nLocationResistance < stBound.nLMax4 THEN
+		nLeakLocations := nLeakLocations OR E_LeakLocation.LOC4;
+	ELSIF stBound.nLMin5 <= nLocationResistance AND nLocationResistance < stBound.nLMax5 THEN
+		nLeakLocations := nLeakLocations OR E_LeakLocation.LOC5;
+	ELSIF stBound.nLMin6 <= nLocationResistance AND nLocationResistance < stBound.nLMax6 THEN
+		nLeakLocations := nLeakLocations OR E_LeakLocation.LOC6;
+	END_IF
+
+	
+	(* Latch Optical table leak errors *)
+	IF stBound.nLMin1 <= nLocationResistance AND nLocationResistance < stBound.nLMax4 THEN
 		IF bAmphosOn THEN
-			eLeakLocation := E_LeakLocation.OpticalTable;
 			bLeakOpticalTableAmphosOn := TRUE;
 		ELSIF NOT bCarbideOn THEN
-			eLeakLocation := E_LeakLocation.OpticalTable;
 			bLeakOpticalTableNoLaser := TRUE;
 		END_IF
 	END_IF
 	
-	IF bCarbideOn AND stBoundaries.nLMin1 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax2 THEN
-		eLeakLocation := E_LeakLocation.Opcpa;
+	(* Latch carbide leak errors *)
+	IF bCarbideOn AND stBound.nLMin1 <= nLocationResistance AND nLocationResistance < stBound.nLMax2 THEN
 		bLeakOpcpaCarbideOn := TRUE;
 	END_IF
 	
-	IF stBoundaries.nLMin5 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax5 THEN
-		eLeakLocation := E_LeakLocation.UnderTable;
+	(* Latch leak under table errors *)
+	IF stBound.nLMin5 <= nLocationResistance AND nLocationResistance < stBound.nLMax5 THEN
 		bLeakUnderTable := TRUE;
 	END_IF
 	
-	IF stBoundaries.nLMin6 <= nLocationResistance AND nLocationResistance < stBoundaries.nLMax6 THEN
-		eLeakLocation := E_LeakLocation.InsideRacks;
+	(* Latch leak inside rack errors *)
+	IF stBound.nLMin6 <= nLocationResistance AND nLocationResistance < stBound.nLMax6 THEN
 		bLeakInsideRacks := TRUE;
 	END_IF
 END_IF
@@ -104,7 +116,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[eLeakLocation := E_LeakLocation.NoLeak;
+        <ST><![CDATA[nLeakLocations := E_LeakLocation.NO_LEAK;
 bLeakOpticalTableAmphosOn := FALSE;
 bLeakOpticalTableNoLaser := FALSE;
 bLeakOpcpaCarbideOn := FALSE;
@@ -113,30 +125,22 @@ bLeakInsideRacks := FALSE;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_LeakMonitor">
-      <LineId Id="519" Count="0" />
-      <LineId Id="322" Count="0" />
-      <LineId Id="317" Count="0" />
-      <LineId Id="450" Count="0" />
-      <LineId Id="318" Count="0" />
-      <LineId Id="320" Count="0" />
-      <LineId Id="451" Count="0" />
-      <LineId Id="321" Count="0" />
-      <LineId Id="319" Count="0" />
-      <LineId Id="308" Count="0" />
-      <LineId Id="324" Count="1" />
-      <LineId Id="449" Count="0" />
-      <LineId Id="326" Count="1" />
-      <LineId Id="330" Count="1" />
-      <LineId Id="452" Count="0" />
-      <LineId Id="332" Count="3" />
-      <LineId Id="453" Count="0" />
-      <LineId Id="336" Count="1" />
-      <LineId Id="323" Count="0" />
-      <LineId Id="282" Count="0" />
+      <LineId Id="725" Count="0" />
+      <LineId Id="677" Count="12" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="726" Count="0" />
+      <LineId Id="724" Count="0" />
+      <LineId Id="693" Count="7" />
+      <LineId Id="727" Count="0" />
+      <LineId Id="701" Count="3" />
+      <LineId Id="728" Count="0" />
+      <LineId Id="705" Count="3" />
+      <LineId Id="729" Count="0" />
+      <LineId Id="709" Count="4" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_LeakMonitor.Reset">
-      <LineId Id="14" Count="0" />
+      <LineId Id="15" Count="0" />
       <LineId Id="7" Count="3" />
       <LineId Id="5" Count="0" />
     </LineIds>

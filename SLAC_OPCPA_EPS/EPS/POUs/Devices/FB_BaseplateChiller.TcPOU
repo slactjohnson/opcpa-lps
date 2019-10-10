@@ -21,7 +21,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF NOT bBaseplateChillerFlow THEN
+      <ST><![CDATA[(* Latch error if the baseplate chiller flow detects an error *)
+IF NOT bBaseplateChillerFlow THEN
 	bError := TRUE;
 END_IF
 ]]></ST>
@@ -37,6 +38,7 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_BaseplateChiller">
+      <LineId Id="62" Count="0" />
       <LineId Id="41" Count="2" />
       <LineId Id="9" Count="0" />
     </LineIds>

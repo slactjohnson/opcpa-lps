@@ -12,28 +12,22 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[F_BaseplateChillerEnable := FALSE;
-
-// Disable baseplate chiller if there is a hardware failure
-IF stErrors.bHardwareFailure THEN
-	RETURN;
+      <ST><![CDATA[IF stErrors.bHardwareFailure // Disable baseplate chiller if there is a hardware failure
+	OR stErrors.bLeakUnderTable // Disable baseplate chiller if there is a leak under the table
+THEN
+	F_BaseplateChillerEnable := FALSE;
+ELSE
+	F_BaseplateChillerEnable := TRUE;
 END_IF
-
-// Disable baseplate chiller if there is a leak under the table
-IF stErrors.bLeakUnderTable THEN
-	RETURN;
-END_IF
-
-F_BaseplateChillerEnable := TRUE;
 ]]></ST>
     </Implementation>
     <LineIds Name="F_BaseplateChillerEnable">
-      <LineId Id="11" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="28" Count="2" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="12" Count="5" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="17" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>
   </POU>

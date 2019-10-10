@@ -13,44 +13,24 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Close the attenuator by default
-F_AmphosAttenuatorEnable := FALSE;
-
-// Close attenuator if there is a hardware failure
-IF stErrors.bHardwareFailure THEN
-	RETURN;
+      <ST><![CDATA[IF stErrors.bHardwareFailure // Close attenuator if there is a hardware failure
+	OR NOT bAmphosOn // Close attenuator if Amphos is not on
+	OR stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable // Close attenuator if there is a leak on the optical table with amphos on, there is a leak in the OPCPA with the carbide on, or there is a leak under the table
+	OR stErrors.bAmphosMRC01 // Close attenuator if there is an AmphosMRC01 error
+THEN
+	F_AmphosAttenuatorEnable := FALSE;
+ELSE
+	F_AmphosAttenuatorEnable := TRUE;
 END_IF
-
-// Close attenuator if Amphos is not on
-IF NOT bAmphosOn THEN
-	RETURN;
-END_IF
-
-// Close attenuator if there is a leak on the optical table with amphos on, there is a leak in the OPCPA with the carbide on, or there is a leak under the table
-IF stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable THEN
-	RETURN;
-END_IF
-
-// Close attenuator if there is an AmphosMRC01 error
-IF stErrors.bAmphosMRC01 THEN
-	RETURN;
-END_IF
-
-F_AmphosAttenuatorEnable := TRUE;
 ]]></ST>
     </Implementation>
     <LineIds Name="F_AmphosAttenuatorEnable">
-      <LineId Id="19" Count="0" />
-      <LineId Id="54" Count="4" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="32" Count="1" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="13" Count="2" />
-      <LineId Id="40" Count="4" />
-      <LineId Id="17" Count="1" />
+      <LineId Id="75" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="70" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>

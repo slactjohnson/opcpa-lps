@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <GVL Name="GVL_IO" Id="{c8b20b5e-d11e-4d29-9934-9abc78f03f88}">
-    <Declaration><![CDATA[{attribute 'qualified_only'}
+    <Declaration><![CDATA[// PLC IO from terminal modules
+{attribute 'qualified_only'}
 VAR_GLOBAL
 	(* CX2020 *)
 
@@ -26,6 +27,12 @@ VAR_GLOBAL
 	nTempMonRaw08 AT %I* : INT; // Ch4
 	
 	(* Slot6 EL1259 Inputs *)
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:AMPHOS:POWER_STATE
+		io: i
+		field: ZNAM "OFF"
+		field: ONAM "ON"
+	'}
 	bAmphosOn AT %I* : BOOL; // Ch1
 	bLeakDetected AT %I* : BOOL; // Ch2
 	bLoopTempSW01 AT %I* : BOOL; // Ch3 Loop 01 NC Temp switch
@@ -36,10 +43,34 @@ VAR_GLOBAL
 	bBaseplateChillerFlow AT %I* : BOOL; // Ch8 Baseplate chiller NC flow sensor
 	
 	(* Slot6 EL1259 Outputs *)
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:AMPHOS_ATTENUATOR:ENABLE
+		io: i
+		field: OSV NO_ALARM
+		field: ZSV MAJOR
+		field: ZNAM DISABLED
+		field: ONAM ENABLED
+	'}
 	bAmphosAttenuatorEnable AT %Q* : BOOL; // Ch1
 	bAmphosAttenuatorEnableManualOperation AT %Q* : BOOL := TRUE;
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:AMPHOS_SHUTTER:ENABLE
+		io: i
+		field: OSV NO_ALARM
+		field: ZSV MAJOR
+		field: ZNAM DISABLED
+		field: ONAM ENABLED
+	'}
 	bAmphosShutterEnable AT %Q* : BOOL; // Ch2
 	bAmphosShutterEnableManualOperation AT %Q* : BOOL := TRUE;
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:CARBIDE_SHUTTER:ENABLE
+		io: i
+		field: OSV NO_ALARM
+		field: ZSV MAJOR
+		field: ZNAM DISABLED
+		field: ONAM ENABLED
+	'}
 	bCarbideShutterEnable AT %Q* : BOOL; // Ch3
 	bCarbideShutterEnableManualOperation AT %Q* : BOOL := TRUE;
 	
@@ -50,8 +81,32 @@ VAR_GLOBAL
 	(* Slot9 EL9184 *)
 	
 	(* Slot10 ES2624 *)
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:DUMP_CHILLER_RELAY:ENABLE
+		io: i
+		field: OSV NO_ALARM
+		field: ZSV MAJOR
+		field: ZNAM DISABLED
+		field: ONAM ENABLED
+	'}
 	bDumpChillerRelay AT %Q* : BOOL; // Ch1 Dump chiller NC relay
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:BASEPLATE_CHILLER_RELAY:ENABLE
+		io: i
+		field: OSV NO_ALARM
+		field: ZSV MAJOR
+		field: ZNAM DISABLED
+		field: ONAM ENABLED
+	'}
 	bBaseplateChillerRelay AT %Q* : BOOL; // Ch2 Baseplate chiller NC relay
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:AMPHOS_RELAY:ENABLE
+		io: i
+		field: OSV NO_ALARM
+		field: ZSV MAJOR
+		field: ZNAM DISABLED
+		field: ONAM ENABLED
+	'}
 	bAmphosRelay AT %Q* : BOOL; // Ch3 Amphos Interlock relay
 	
 	(* Slot11 EL6022 *)
@@ -59,6 +114,12 @@ VAR_GLOBAL
 	(* Slot12 EL9505 *)
 	
 	(* Slot13 EL1124 *)
+	{attribute 'pytmc' := '
+		pv: HPO:LPS:OPCPA:POWER_STATE
+		io: i
+		field: ZNAM "OFF"
+		field: ONAM "ON"
+	'}
 	bCarbideOn AT %I* : BOOL; // Ch1
 	bAmphosMRC01 AT %I* : BOOL; // Ch2 NC Amphos MRC switch
 	bAmphosMRC02 AT %I* : BOOL; // Ch3 NC Amphos MRC switch

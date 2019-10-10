@@ -12,28 +12,22 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[F_DumpChillerEnable := FALSE;
-
-// Disable dump chiller if there's a hardware failure
-IF stErrors.bHardwareFailure THEN
-	RETURN;
+      <ST><![CDATA[IF stErrors.bHardwareFailure // Disable dump chiller if there's a hardware failure
+	OR stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpticalTableNoLaser OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable // Disable dump chiller for these leak conditions
+THEN
+	F_DumpChillerEnable := FALSE;
+ELSE
+	F_DumpChillerEnable := TRUE;
 END_IF
-
-// Disable dump chiller for these leak conditions
-IF stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpticalTableNoLaser OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable THEN
-	RETURN;
-END_IF
-
-F_DumpChillerEnable := TRUE;
 ]]></ST>
     </Implementation>
     <LineIds Name="F_DumpChillerEnable">
-      <LineId Id="12" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="29" Count="2" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="13" Count="5" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="18" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>
   </POU>

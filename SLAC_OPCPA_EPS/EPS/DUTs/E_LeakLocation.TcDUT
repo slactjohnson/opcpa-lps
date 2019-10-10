@@ -5,12 +5,14 @@
 {attribute 'strict'}
 TYPE E_LeakLocation :
 (
-	NoLeak := 0,
-	OpticalTable := 1,
-	Opcpa := 2,
-	UnderTable := 3,
-	InsideRacks := 4
-);
+	NO_LEAK := 0,
+	LOC1 := 1,
+	LOC2 := 2,
+	LOC3 := 4,
+	LOC4 := 8,
+	LOC5 := 16,
+	LOC6 := 32
+) BYTE;
 END_TYPE
 ]]></Declaration>
   </DUT>

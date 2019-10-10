@@ -34,7 +34,8 @@ VAR_TEMP
 	fMonitorVoltage : LREAL; // Voltage calculated from the raw ADC input
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fMonitorVoltage := F_Scale(
+      <ST><![CDATA[(* Scale the analog signal to voltage *)
+fMonitorVoltage := F_Scale(
 	fRawData := nTempMonRaw,
 	fRawDataLowerOffLimit := GVL_EL3174.fRawLowerLimit,
 	fRawDataUpperOffLimit := GVL_EL3174.fRawUpperLimit,
@@ -43,11 +44,15 @@ END_VAR]]></Declaration>
 
 fTemperature := fMonitorVoltage * 100;
 	
+(* Set error flag if temperature above max allowed and the amphos is on *)
 bError := fTemperature > stSetpoints.fMaxTemperature AND bAmphosOn;
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_TemperatureMonitor">
-      <LineId Id="73" Count="9" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="73" Count="7" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="81" Count="1" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>
