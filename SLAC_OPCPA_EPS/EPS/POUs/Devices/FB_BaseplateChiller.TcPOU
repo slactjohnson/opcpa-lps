@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_BaseplateChiller" Id="{b3f0a1a0-251e-4592-bbae-0313baecaf1e}" SpecialFunc="None">
+    <Declaration><![CDATA[// Monitors the baseplate chiller from the flow sensor
+FUNCTION_BLOCK FB_BaseplateChiller
+VAR_INPUT
+	bBaseplateChillerFlow : BOOL; // Signal from the flow sensor. Normally high.
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL; // Whether an error was detected. Should latch until reset
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Latch error if the baseplate chiller flow detects an error *)
+IF NOT bBaseplateChillerFlow THEN
+	bError := TRUE;
+END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="Reset" Id="{93053126-6c32-4761-a872-242edc24bfe8}">
+      <Declaration><![CDATA[// Reset latched errors
+METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bError := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_BaseplateChiller">
+      <LineId Id="62" Count="0" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_BaseplateChiller.Reset">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
