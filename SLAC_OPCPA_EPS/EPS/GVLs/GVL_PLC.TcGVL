@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_PLC" Id="{427ac7fa-93f9-46f1-a3bb-0e3bcdb64033}">
+    <Declaration><![CDATA[// PLC global variables
+{attribute 'qualified_only'}
+VAR_GLOBAL
+	AMSNetId AT %I* : AMSNETID;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

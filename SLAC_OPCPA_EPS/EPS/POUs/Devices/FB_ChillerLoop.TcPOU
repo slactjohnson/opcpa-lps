@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FB_ChillerLoop" Id="{c2a5fec4-a67f-4351-a69c-81c3c23f0976}" SpecialFunc="None">
+    <Declaration><![CDATA[// Monitors the chiller loop from the flow sensor
+FUNCTION_BLOCK FB_ChillerLoop
+VAR_INPUT
+	bLoopTempSW : BOOL; // NC Temperature switch. Indicates when temperature is too high
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL := FALSE; // Whether an error was detected. Goes back to normal on its own
+	{attribute 'pytmc' := '
+		pv: OVERRIDE
+		io: io
+		field: ZNAM "OFF"
+		field: ONAM "ON"
+	'}
+	bOperatorOverride : BOOL := FALSE; // If TRUE, allows the EPS to keep running despite the chiller loop error
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Set error flag if loop temperature monitor detects an error *)
+bError := NOT bLoopTempSW;
+
+(* Reset the operator override if the system returns to normal tempreature range *)
+IF bLoopTempSW THEN
+	bOperatorOverride := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_ChillerLoop">
+      <LineId Id="138" Count="0" />
+      <LineId Id="105" Count="4" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

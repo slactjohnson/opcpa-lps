@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FB_TraceTekModbus" Id="{0f7af4f5-240b-40c0-81d3-4ad14d941ee4}" SpecialFunc="None">
+    <Declaration><![CDATA[// Communicates with the TraceTek TTSIM-1A hardware over Modbus to get more information about a leak
+FUNCTION_BLOCK FB_TraceTekModbus
+VAR_INPUT
+	nModbusSlaveAddress : BYTE; // Modbus address of slave to be read from
+	bLeakDetected : BOOL; // Whether a leak has been detected
+	bResetError : BOOL; // Reset signal for error
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: LOC_RES
+		io: input
+	'}
+	nLocationResistance: UINT; // Resistance measured in the detection wire
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL := FALSE; // Flag for Modbus communication errors
+	bBusy : BOOL := FALSE;
+	nErrorId : MODBUS_ERRORS := MODBUS_ERRORS.MODBUSERROR_NO_ERROR; // Description of Modbus error
+END_VAR
+VAR
+	aModbusBuffer : WORD := 16#FFFF;  // "Infinite" until real value is read from device
+	fbModbusMaster : ModbusRtuMaster_KL6x22B := (
+		Quantity := 1,
+		MBAddr := 1,
+		cbLength := SIZEOF(aModbusBuffer),
+		pMemoryAddr := ADR(aModbusBuffer),
+		Timeout := T#5S
+	);
+	fbPoll : TON := (PT := T#0S); // Poll rate for reading modbus. Start at 0 so that modbus is read on first call
+END_VAR
+VAR_STAT
+	tPollRate : Time := T#500ms;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Advance poll rate timer
+fbPoll(IN := TRUE);
+
+// Update modbus status
+fbModbusMaster.Execute := FALSE;
+fbModbusMaster.ReadInputRegs();
+
+IF bResetError THEN // Reset modbus error
+	bError := FALSE;
+	nErrorId := MODBUS_ERRORS.MODBUSERROR_NO_ERROR;
+ELSIF fbModbusMaster.Error OR NOT fbModbusMaster.BUSY THEN
+	// Allow fb error state to go back to normal by checking modbus error state after reading has finished
+	bError := fbModbusMaster.Error;
+	nErrorId := fbModbusMaster.ErrorId;
+END_IF
+
+(* If the modbus interface isn't busy and there is a leak, try reading
+the leak location from the TraceTek. Even if there is no leak, maintain 
+the modbus connection by checking every few seconds using the fbPoll rate *)
+IF NOT fbModbusMaster.BUSY AND (bLeakDetected OR fbPoll.Q) THEN
+	fbPoll(IN := FALSE, PT := tPollRate);
+	fbModbusMaster.UnitID := nModbusSlaveAddress;
+	fbModbusMaster.Execute := TRUE;
+	fbModbusMaster.ReadInputRegs();
+END_IF
+
+// Copy the location resitance from the buffer to the FB output
+nLocationResistance := WORD_TO_UINT(aModbusBuffer);]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TraceTekModbus">
+      <LineId Id="214" Count="0" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="333" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="251" Count="2" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="131" Count="2" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="335" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

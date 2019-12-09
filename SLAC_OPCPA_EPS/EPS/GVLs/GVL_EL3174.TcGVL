@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_EL3174" Id="{9f273269-10f0-4204-b104-0878bb25f2b1}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	(* Analog scaling *)
+	fRawUpperLimit : LREAL := 16#7736; // Highest raw signal that can be read
+	fRawLowerLimit : LREAL := 16#0000; // Lowest raw signal that can be read
+	fScaleUpperLimit : LREAL := 10; // Upper limit in volts
+	fScaleLowerLimit : LREAL := 0; // Lower limit in volts
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

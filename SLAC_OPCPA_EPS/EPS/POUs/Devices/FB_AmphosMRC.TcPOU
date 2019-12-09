@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_AmphosMRC" Id="{f6a3f2b0-317f-436a-b8cd-e574db6e2e84}" SpecialFunc="None">
+    <Declaration><![CDATA[// Monitors the Amphos MRC input signal for errors
+FUNCTION_BLOCK FB_AmphosMRC
+VAR_INPUT
+	bAmphosOn : BOOL; // Whether the Amphos is turned on
+	bMRC : BOOL; // Error signal. Signal should normally be high
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+		pv: ERROR
+		io: i
+		field: OSV MAJOR
+		field: ZSV NO_ALARM
+		field: ZNAM OK
+		field: ONAM ERROR
+	'}
+	bError : BOOL; // Whether an error was detected. Error should go back to normal on its own
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Set error flag if amphos is on and the MRC has an error *)
+bError := bAmphosOn AND NOT bMRC;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_AmphosMRC">
+      <LineId Id="47" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

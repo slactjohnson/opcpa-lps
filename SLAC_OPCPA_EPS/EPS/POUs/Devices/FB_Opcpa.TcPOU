@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+  <POU Name="FB_Opcpa" Id="{b09b705a-b75a-44ab-aab6-38306d5c5f30}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Opcpa
+VAR_INPUT
+	nOpcpaVoltageRaw : INT;
+	bAmphosOn : BOOL;
+END_VAR
+VAR_IN_OUT
+	stSetpoints : ST_LaserSetpoints;
+END_VAR
+VAR_OUTPUT
+	fOpcpaVoltage : LREAL;
+	bError : BOOL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fOpcpaVoltage := F_Scale(
+	fRawData := nOpcpaVoltageRaw,
+	fRawDataLowerOffLimit := GVL_EL3174.fRawLowerLimit,
+	fRawDataUpperOffLimit := GVL_EL3174.fRawUpperLimit,
+	fScaleDataLowerOffLimit := GVL_EL3174.fScaleLowerLimit,
+	fScaleDataUpperOffLimit := GVL_EL3174.fScaleUpperLimit);
+	
+IF  bAmphosOn AND fOpcpaVoltage < stSetpoints.nMinNominalVoltage THEN
+	bError := TRUE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="Reset" Id="{1c7a9fd1-6742-422e-8400-0035b7297bfe}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bError := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Opcpa">
+      <LineId Id="37" Count="8" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Opcpa.Reset">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
