@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="MAIN" Id="{749355aa-8fe6-4a8e-b863-c3c2acf01034}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -286,6 +286,7 @@ GVL_IO.bBaseplateChillerRelay := F_BaseplateChillerEnable(stErrors := stErrors);
 (* Enable Amphos if interlock logic passes *)
 GVL_IO.bAmphosRelay := F_AmphosEnable(
 	fAmphosVoltage := fbAmphos.fVoltage,
+	bEnabled := GVL_IO.bAmphosRelay,
 	stAmphosSetpoints := GVL_Laser.stAmphosSP,
 	stErrors := stErrors
 );
@@ -439,6 +440,7 @@ END_IF
       <LineId Id="1492" Count="1" />
       <LineId Id="2185" Count="0" />
       <LineId Id="1494" Count="1" />
+      <LineId Id="2469" Count="0" />
       <LineId Id="1698" Count="0" />
       <LineId Id="1496" Count="1" />
       <LineId Id="1868" Count="0" />
