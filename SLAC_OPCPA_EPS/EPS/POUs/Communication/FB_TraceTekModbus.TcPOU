@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
   <POU Name="FB_TraceTekModbus" Id="{0f7af4f5-240b-40c0-81d3-4ad14d941ee4}" SpecialFunc="None">
     <Declaration><![CDATA[// Communicates with the TraceTek TTSIM-1A hardware over Modbus to get more information about a leak
 FUNCTION_BLOCK FB_TraceTekModbus
@@ -23,7 +23,6 @@ VAR_OUTPUT
 		field: ONAM ERROR
 	'}
 	bError : BOOL := FALSE; // Flag for Modbus communication errors
-	bBusy : BOOL := FALSE;
 	nErrorId : MODBUS_ERRORS := MODBUS_ERRORS.MODBUSERROR_NO_ERROR; // Description of Modbus error
 END_VAR
 VAR
@@ -38,7 +37,7 @@ VAR
 	fbPoll : TON := (PT := T#0S); // Poll rate for reading modbus. Start at 0 so that modbus is read on first call
 END_VAR
 VAR_STAT
-	tPollRate : Time := T#500ms;
+	tPollRate : TIME := T#500MS;
 END_VAR
 ]]></Declaration>
     <Implementation>
