@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <GVL Name="GVL_IO" Id="{c8b20b5e-d11e-4d29-9934-9abc78f03f88}">
     <Declaration><![CDATA[// PLC IO from terminal modules
 {attribute 'qualified_only'}
@@ -7,123 +7,172 @@ VAR_GLOBAL
 	(* CX2020 *)
 
 	(* Slot1 EL3174 *)
+    {attribute 'TcLinkTo' :=    'TIIB[LPS_PLC_E01_EL3174]^AI Standard Channel 1^Value'}
 	nOpcpaVoltageRaw AT %I* : INT; // Ch1
+    
+    {attribute 'TcLinkTo' :=    'TIIB[LPS_PLC_E01_EL3174]^AI Standard Channel 2^Value'}
 	nAmphosVoltageRaw AT %I* : INT; // Ch2
 	
+    
+    
 	(* Slot2 EL3174 *)
 	
 	
 	(* Slot3 EL9189 *)
 	
-	(* Slot4 EL3174 *)
+    (* Slot4 EL9184 *)
+    
+	(* Slot5 EL3174 *)
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E05_EL3174]^AI Standard Channel 1^Value'}
 	nTempMonRaw01 AT %I* : INT; // Ch1
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E05_EL3174]^AI Standard Channel 2^Value'}
 	nTempMonRaw02 AT %I* : INT; // Ch2
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E05_EL3174]^AI Standard Channel 3^Value'}
 	nTempMonRaw03 AT %I* : INT; // Ch3
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E05_EL3174]^AI Standard Channel 4^Value'}
 	nTempMonRaw04 AT %I* : INT; // Ch4
 	
-	(* Slot5 EL3174 *)
+	(* Slot6 EL3174 *)
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E06_EL3174]^AI Standard Channel 1^Value'}
 	nTempMonRaw05 AT %I* : INT; // Ch1
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E06_EL3174]^AI Standard Channel 2^Value'}
 	nTempMonRaw06 AT %I* : INT; // Ch2
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E06_EL3174]^AI Standard Channel 3^Value'}
 	nTempMonRaw07 AT %I* : INT; // Ch3
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E06_EL3174]^AI Standard Channel 4^Value'}
 	nTempMonRaw08 AT %I* : INT; // Ch4
 	
-	(* Slot6 EL1259 Inputs *)
-	{attribute 'pytmc' := '
-		pv: HPO:LPS:AMPHOS:POWER_STATE
+	(* Slot7 EL1259 Inputs *)
+    {attribute 'pytmc' := '
+		pv: @(BASE):LPS:AMPHOS:POWER_STATE
 		io: i
 		field: ZNAM "OFF"
 		field: ONAM "ON"
 	'}
-	bAmphosOn AT %I* : BOOL; // Ch1
-	bLeakDetected AT %I* : BOOL; // Ch2
-	bLoopTempSW01 AT %I* : BOOL; // Ch3 Loop 01 NC Temp switch
-	bLoopTempSW02 AT %I* : BOOL; // Ch4 Loop 02 NC Temp switch
-	bLoopTempSW03 AT %I* : BOOL; // Ch5 Loop 03 NC Temp switch
-	bLoopTempSW04 AT %I* : BOOL; // Ch6 Loop 04 NC Temp switch
-	bDumpChillerFlow AT %I* : BOOL; // Ch7 Dump chiller NC flow sensor
-	bBaseplateChillerFlow AT %I* : BOOL; // Ch8 Baseplate chiller NC flow sensor
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 1^Status^Input state'}
+    bAmphosOn AT %I* : BOOL; // Ch1
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 2^Status^Input state'}
+    bLeakDetected AT %I* : BOOL; // Ch2
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 3^Status^Input state'}
+    bLoopTempSW01 AT %I* : BOOL; // Ch3 Loop 01 NC Temp switch
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 4^Status^Input state'}
+    bLoopTempSW02 AT %I* : BOOL; // Ch4 Loop 02 NC Temp switch
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 5^Status^Input state'}
+    bLoopTempSW03 AT %I* : BOOL; // Ch5 Loop 03 NC Temp switch
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 6^Status^Input state'}
+    bLoopTempSW04 AT %I* : BOOL; // Ch6 Loop 04 NC Temp switch
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 7^Status^Input state'}
+    bDumpChillerFlow AT %I* : BOOL; // Ch7 Dump chiller NC flow sensor
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 8^Status^Input state'}
+	bBaseplateChillerFlow AT %I* : BOOL; // Ch8 Baseplate chiller NC flow sensor	
 	
-	(* Slot6 EL1259 Outputs *)
+	(* Slot7 EL1259 Outputs *)
+    (*
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:AMPHOS_ATTENUATOR:ENABLE
+		pv: @(BASE):LPS:AMPHOS_ATTENUATOR:ENABLE
 		io: i
 		field: OSV NO_ALARM
 		field: ZSV MAJOR
 		field: ZNAM DISABLED
 		field: ONAM ENABLED
 	'}
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E06]^Channel 1^Output'}
 	bAmphosAttenuatorEnable AT %Q* : BOOL; // Ch1
+    
+    
 	bAmphosAttenuatorEnableManualOperation AT %Q* : BOOL := TRUE;
+    *)
+    
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:AMPHOS_SHUTTER:ENABLE
+		pv: @(BASE):LPS:AMPHOS_SHUTTER:ENABLE
 		io: i
 		field: OSV NO_ALARM
 		field: ZSV MAJOR
 		field: ZNAM DISABLED
 		field: ONAM ENABLED
 	'}
-	bAmphosShutterEnable AT %Q* : BOOL; // Ch2
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTO Outputs 10x Channel 1^Ctrl^Manual output state'}
+	bAmphosShutterEnable AT %Q* : BOOL; // Ch1
+    
+    
 	bAmphosShutterEnableManualOperation AT %Q* : BOOL := TRUE;
+    
+    
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:CARBIDE_SHUTTER:ENABLE
+		pv: @(BASE):LPS:CARBIDE_SHUTTER:ENABLE
 		io: i
 		field: OSV NO_ALARM
 		field: ZSV MAJOR
 		field: ZNAM DISABLED
 		field: ONAM ENABLED
 	'}
-	bCarbideShutterEnable AT %Q* : BOOL; // Ch3
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTO Outputs 10x Channel 2^Ctrl^Manual output state'}
+	bCarbideShutterEnable AT %Q* : BOOL; // Ch2
+    
+    
 	bCarbideShutterEnableManualOperation AT %Q* : BOOL := TRUE;
 	
-	(* Slot7 EL9184 *)
+	(* Slot8 EL9184 *)
 	
-	(* Slot8 EL1259 *)
+	(* Slot9 EL1259 *)
 	
-	(* Slot9 EL9184 *)
+	(* Slot10 EL9184 *)
 	
-	(* Slot10 ES2624 *)
+	(* Slot11 ES2624 *)
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:DUMP_CHILLER_RELAY:ENABLE
+		pv: @(BASE):LPS:DUMP_CHILLER_RELAY:ENABLE
 		io: i
 		field: OSV NO_ALARM
 		field: ZSV MAJOR
 		field: ZNAM DISABLED
 		field: ONAM ENABLED
 	'}
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E11_EL2624]^Channel 1^Output'}
 	bDumpChillerRelay AT %Q* : BOOL; // Ch1 Dump chiller NC relay
+    
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:BASEPLATE_CHILLER_RELAY:ENABLE
+		pv: @(BASE):LPS:BASEPLATE_CHILLER_RELAY:ENABLE
 		io: i
 		field: OSV NO_ALARM
 		field: ZSV MAJOR
 		field: ZNAM DISABLED
 		field: ONAM ENABLED
 	'}
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E11_EL2624]^Channel 2^Output'}
 	bBaseplateChillerRelay AT %Q* : BOOL; // Ch2 Baseplate chiller NC relay
+    
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:AMPHOS_RELAY:ENABLE
+		pv: @(BASE):LPS:AMPHOS_RELAY:ENABLE
 		io: i
 		field: OSV NO_ALARM
 		field: ZSV MAJOR
 		field: ZNAM DISABLED
 		field: ONAM ENABLED
 	'}
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E11_EL2624]^Channel 3^Output'}
 	bAmphosRelay AT %Q* : BOOL; // Ch3 Amphos Interlock relay
 	
-	(* Slot11 EL6022 *)
+	(* Slot12 EL6022 *)
 	
-	(* Slot12 EL9505 *)
+	(* Slot13 EL9505 *)
 	
-	(* Slot13 EL1124 *)
+	(* Slot14 EL1124 *)
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:OPCPA:POWER_STATE
+		pv: @(BASE):LPS:OPCPA:POWER_STATE
 		io: i
 		field: ZNAM "OFF"
 		field: ONAM "ON"
 	'}
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 1^Input'}
 	bCarbideOn AT %I* : BOOL; // Ch1
+    
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 2^Input'}
 	bAmphosMRC01 AT %I* : BOOL; // Ch2 NC Amphos MRC switch
+    
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 3^Input'}
 	bAmphosMRC02 AT %I* : BOOL; // Ch3 NC Amphos MRC switch
+    
+    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 4^Input'}
 	bAmphosMRC03 AT %I* : BOOL; // Ch4 NC Amphos MRC switch
 	
 END_VAR]]></Declaration>
