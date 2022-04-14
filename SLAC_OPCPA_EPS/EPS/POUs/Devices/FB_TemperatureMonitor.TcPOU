@@ -12,7 +12,7 @@ VAR_IN_OUT
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
-		pv:
+		pv: TEMP
 		io: i
 		field: EGU C
 		field: LOPR 0.0

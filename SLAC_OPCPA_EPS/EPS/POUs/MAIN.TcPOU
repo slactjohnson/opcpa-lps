@@ -7,83 +7,83 @@ VAR
 	fbErrorTriggers : FB_ErrorTriggers; // Brand new errors this cycle
 	
 	// Leak Monitor
-	{attribute 'pytmc' := 'pv: HPO:TTSIM:DEV01'}
+	{attribute 'pytmc' := 'pv: @(BASE):TTSIM:DEV01'}
 	fbTraceTekModbus : FB_TraceTekModbus; // Modbus connection to TraceTek
-	{attribute 'pytmc' := 'pv: HPO:LPS:LEAK:RESET'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:LEAK:RESET'}
 	bLeakMonitorReset : BOOL; // Leak monitor reset flag
-	{attribute 'pytmc' := 'pv: HPO:LPS:LEAK'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:LEAK'}
 	fbLeakMonitor : FB_LeakMonitor; // Leak detection
 	
 	// Chiller Loop temperature monitors
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP01'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMP01'}
 	fbChillerLoop01 : FB_ChillerLoop; // Chiller loop 01
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP02'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMP02'}
 	fbChillerLoop02 : FB_ChillerLoop; // Chiller loop 02
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP03'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMP03'}
 	fbChillerLoop03 : FB_ChillerLoop; // Chiller loop 03
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMP04'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMP04'}
 	fbChillerLoop04 : FB_ChillerLoop; // Chiller loop 04
 	
 	// Laser monitors
-	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:AMPHOS'}
 	fbAmphos : FB_Laser; // Amphos laser
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:AMPHOS:RESET
+		pv: @(BASE):LPS:AMPHOS:RESET
 		io: o
 	'}
 	bAmphosReset : BOOL; // Amphos laser error unlatch flag
-	{attribute 'pytmc' := 'pv: HPO:LPS:OPCPA'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:OPCPA'}
 	fbOpcpa : FB_Laser; // OPCPA laser
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:OPCPA:RESET
+		pv: @(BASE):LPS:OPCPA:RESET
 		io: o
 	'}
 	bOpcpaReset : BOOL; // OPCPA laser error unlatch flag
 	
 	// Temperature monitors
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON01'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON01'}
 	fbTempMon01 : FB_TemperatureMonitor; // System temperature monitor 01
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON02'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON02'}
 	fbTempMon02 : FB_TemperatureMonitor; // System temperature monitor 02
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON03'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON03'}
 	fbTempMon03 : FB_TemperatureMonitor; // System temperature monitor 03
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON04'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON04'}
 	fbTempMon04 : FB_TemperatureMonitor; // System temperature monitor 04
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON05'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON05'}
 	fbTempMon05 : FB_TemperatureMonitor; // System temperature monitor 05
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON06'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON06'}
 	fbTempMon06 : FB_TemperatureMonitor; // System temperature monitor 06
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON07'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON07'}
 	fbTempMon07 : FB_TemperatureMonitor; // System temperature monitor 07
-	{attribute 'pytmc' := 'pv: HPO:LPS:TEMPMON08'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON08'}
 	fbTempMon08 : FB_TemperatureMonitor; // System temperature monitor 08
 	
 	// Chillers
-	{attribute 'pytmc' := 'pv: HPO:LPS:DUMP_CHILLER'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:DUMP_CHILLER'}
 	fbDumpChiller : FB_DumpChiller; // Flow sensor monitor for the dump chiller
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:DUMP_CHILLER:RESET
+		pv: @(BASE):LPS:DUMP_CHILLER:RESET
 		io: o
 	'}
 	bDumpChillerReset : BOOL; // Dump chiller error unlatch flag
 	
-	{attribute 'pytmc' := 'pv: HPO:LPS:BASEPLATE_CHILLER'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:BASEPLATE_CHILLER'}
 	fbBaseplateChiller : FB_BaseplateChiller; // Flow sensor monitor for the baseplate chiller
 	{attribute 'pytmc' := '
-		pv: HPO:LPS:BASEPLATE_CHILLER:RESET
+		pv: @(BASE):LPS:BASEPLATE_CHILLER:RESET
 		io: o
 	'}
 	bBaseplateChillerReset : BOOL; // Baseplate chiller error unlatch flag
 	
 	// Amphos MRCs
-	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS_MRC01'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:AMPHOS_MRC01'}
 	fbAmphosMRC01 : FB_AmphosMRC; // MRC monitor 01
-	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS_MRC02'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:AMPHOS_MRC02'}
 	fbAmphosMRC02 : FB_AmphosMRC; // MRC monitor 02
-	{attribute 'pytmc' := 'pv: HPO:LPS:AMPHOS_MRC03'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:AMPHOS_MRC03'}
 	fbAmphosMRC03 : FB_AmphosMRC; // MRC monitor 03
 	
-	{attribute 'pytmc' := 'pv: HPO:LPS:PLC'}
+	{attribute 'pytmc' := 'pv: @(BASE):LPS:PLC'}
 	fbDiag : FB_EcatDiag; // Ethercat diagnostics
 END_VAR
 ]]></Declaration>
@@ -257,10 +257,12 @@ Now that each of the input signals have been checked and errors stored,
 run the interlock logic.
 *******************************************************************)
 (* Enable Amphos attenuator if interlock logic passes *)
+(*
 GVL_IO.bAmphosAttenuatorEnable := F_AmphosAttenuatorEnable(
 	bAmphosOn := GVL_IO.bAmphosOn,
 	stErrors := stErrors
 );
+Deprecated Logic -- Not Currently Used*)
 
 (* Enable Amphos shutter if interlock logic passes *)
 GVL_IO.bAmphosShutterEnable := F_AmphosShutterEnable(
@@ -427,7 +429,9 @@ END_IF
       <LineId Id="1465" Count="4" />
       <LineId Id="1962" Count="4" />
       <LineId Id="1600" Count="0" />
+      <LineId Id="2555" Count="0" />
       <LineId Id="1473" Count="4" />
+      <LineId Id="2556" Count="0" />
       <LineId Id="2181" Count="0" />
       <LineId Id="1478" Count="6" />
       <LineId Id="1697" Count="0" />
