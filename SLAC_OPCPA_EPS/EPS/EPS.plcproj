@@ -84,9 +84,6 @@
     <Compile Include="POUs\Devices\FB_ChillerLoop.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Devices\FB_AmphosMRC.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Devices\FB_TemperatureMonitor.TcPOU">
       <SubType>Code</SubType>
     </Compile>

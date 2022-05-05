@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="F_AmphosAttenuatorEnable" Id="{7ab6d45d-4336-488b-ae1d-ec9e617ae7af}" SpecialFunc="None">
     <Declaration><![CDATA[// Interlock logic for the Amphos attenuator
 FUNCTION F_AmphosAttenuatorEnable : BOOL
@@ -16,7 +16,6 @@ END_VAR
       <ST><![CDATA[IF stErrors.bHardwareFailure // Close attenuator if there is a hardware failure
 	OR NOT bAmphosOn // Close attenuator if Amphos is not on
 	OR stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable // Close attenuator if there is a leak on the optical table with amphos on, there is a leak in the OPCPA with the carbide on, or there is a leak under the table
-	OR stErrors.bAmphosMRC01 // Close attenuator if there is an AmphosMRC01 error
 THEN
 	F_AmphosAttenuatorEnable := FALSE;
 ELSE
@@ -24,15 +23,5 @@ ELSE
 END_IF
 ]]></ST>
     </Implementation>
-    <LineIds Name="F_AmphosAttenuatorEnable">
-      <LineId Id="75" Count="1" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="78" Count="1" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

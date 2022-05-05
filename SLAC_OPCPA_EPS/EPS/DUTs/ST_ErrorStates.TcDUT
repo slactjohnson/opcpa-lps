@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_ErrorStates" Id="{01fc80e0-e88b-4244-badd-6975c9c0b2a0}">
     <Declaration><![CDATA[// Error states that can occur in the program
 TYPE ST_ErrorStates :
@@ -34,11 +34,6 @@ STRUCT
 	// Dump chiller
 	bDumpChiller : BOOL; // Dump chiller error
 	bBaseplateChiller : BOOL; // Baseplate chiller error
-	
-	// Amphos MRC
-	bAmphosMRC01 : BOOL; // Amphos MRC 01 Error
-	bAmphosMRC02 : BOOL; // Amphos MRC 01 Error
-	bAmphosMRC03 : BOOL; // Amphos MRC 01 Error
 	
 	// Hardware Failure
 	bHardwareFailure : BOOL; // A component of the EPS has failed

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <GVL Name="GVL_IO" Id="{c8b20b5e-d11e-4d29-9934-9abc78f03f88}">
     <Declaration><![CDATA[// PLC IO from terminal modules
 {attribute 'qualified_only'}
@@ -67,22 +67,6 @@ VAR_GLOBAL
 	bBaseplateChillerFlow AT %I* : BOOL; // Ch8 Baseplate chiller NC flow sensor	
 	
 	(* Slot7 EL1259 Outputs *)
-    (*
-	{attribute 'pytmc' := '
-		pv: @(BASE):LPS:AMPHOS_ATTENUATOR:ENABLE
-		io: i
-		field: OSV NO_ALARM
-		field: ZSV MAJOR
-		field: ZNAM DISABLED
-		field: ONAM ENABLED
-	'}
-    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E06]^Channel 1^Output'}
-	bAmphosAttenuatorEnable AT %Q* : BOOL; // Ch1
-    
-    
-	bAmphosAttenuatorEnableManualOperation AT %Q* : BOOL := TRUE;
-    *)
-    
 	{attribute 'pytmc' := '
 		pv: @(BASE):LPS:AMPHOS_SHUTTER:ENABLE
 		io: i
@@ -166,14 +150,6 @@ VAR_GLOBAL
     {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 1^Input'}
 	bCarbideOn AT %I* : BOOL; // Ch1
     
-    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 2^Input'}
-	bAmphosMRC01 AT %I* : BOOL; // Ch2 NC Amphos MRC switch
-    
-    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 3^Input'}
-	bAmphosMRC02 AT %I* : BOOL; // Ch3 NC Amphos MRC switch
-    
-    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 4^Input'}
-	bAmphosMRC03 AT %I* : BOOL; // Ch4 NC Amphos MRC switch
 	
 END_VAR]]></Declaration>
   </GVL>
