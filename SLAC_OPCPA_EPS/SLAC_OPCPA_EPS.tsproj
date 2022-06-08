@@ -239,57 +239,17 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_PLC.AMSNetId</Name>
+							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
+						</Var>
+						<Var>
 							<Name>GVL_IO.nOpcpaVoltageRaw</Name>
 							<Comment><![CDATA[ Ch1]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_PLC.AMSNetId</Name>
-							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
-						</Var>
-						<Var>
 							<Name>GVL_IO.nAmphosVoltageRaw</Name>
 							<Comment><![CDATA[ Ch2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw01</Name>
-							<Comment><![CDATA[ Ch1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw02</Name>
-							<Comment><![CDATA[ Ch2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw03</Name>
-							<Comment><![CDATA[ Ch3]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw04</Name>
-							<Comment><![CDATA[ Ch4]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw05</Name>
-							<Comment><![CDATA[ Ch1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw06</Name>
-							<Comment><![CDATA[ Ch2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw07</Name>
-							<Comment><![CDATA[ Ch3]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw08</Name>
-							<Comment><![CDATA[ Ch4]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
@@ -330,21 +290,6 @@
 						<Var>
 							<Name>GVL_IO.bCarbideOn</Name>
 							<Comment><![CDATA[ Ch1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.bAmphosMRC01</Name>
-							<Comment><![CDATA[ Ch2 NC Amphos MRC switch]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.bAmphosMRC02</Name>
-							<Comment><![CDATA[ Ch3 NC Amphos MRC switch]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.bAmphosMRC03</Name>
-							<Comment><![CDATA[ Ch4 NC Amphos MRC switch]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -10629,18 +10574,6 @@ Bit1: Value smaller than Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_IO.nAmphosVoltageRaw" VarB="AI Standard Channel 2^Value"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.nOpcpaVoltageRaw" VarB="AI Standard Channel 1^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E05_EL3174">
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw01" VarB="AI Standard Channel 1^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw02" VarB="AI Standard Channel 2^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw03" VarB="AI Standard Channel 3^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw04" VarB="AI Standard Channel 4^Value"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E06_EL3174">
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw05" VarB="AI Standard Channel 1^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw06" VarB="AI Standard Channel 2^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw07" VarB="AI Standard Channel 3^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw08" VarB="AI Standard Channel 4^Value"/>
-			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E07_EL1259">
 				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosOn" VarB="MTI Inputs 10x Channel 1^Status^Input state"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bBaseplateChillerFlow" VarB="MTI Inputs 10x Channel 8^Status^Input state"/>
@@ -10713,9 +10646,6 @@ Bit1: Value smaller than Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^MAIN.fbTraceTekModbus.fbModbusMaster.OutData^D" VarB="COM Outputs Channel 1^Data Out 9" Size="8" OffsA="72"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E14_EL1124">
-				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosMRC01" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosMRC02" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosMRC03" VarB="Channel 4^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bCarbideOn" VarB="Channel 1^Input"/>
 			</OwnerB>
 		</OwnerA>
