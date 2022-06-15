@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FB_ChillerLoop" Id="{c2a5fec4-a67f-4351-a69c-81c3c23f0976}" SpecialFunc="None">
     <Declaration><![CDATA[// Monitors the chiller loop from the flow sensor
 FUNCTION_BLOCK FB_ChillerLoop
@@ -34,10 +34,5 @@ IF bLoopTempSW THEN
 	bOperatorOverride := FALSE;
 END_IF]]></ST>
     </Implementation>
-    <LineIds Name="FB_ChillerLoop">
-      <LineId Id="138" Count="0" />
-      <LineId Id="105" Count="4" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FB_BaseplateChiller" Id="{b3f0a1a0-251e-4592-bbae-0313baecaf1e}" SpecialFunc="None">
     <Declaration><![CDATA[// Monitors the baseplate chiller from the flow sensor
 FUNCTION_BLOCK FB_BaseplateChiller
@@ -22,7 +22,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Latch error if the baseplate chiller flow detects an error *)
-IF NOT bBaseplateChillerFlow THEN
+IF bBaseplateChillerFlow THEN
 	bError := TRUE;
 END_IF
 ]]></ST>
@@ -37,13 +37,5 @@ END_VAR
         <ST><![CDATA[bError := FALSE;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_BaseplateChiller">
-      <LineId Id="62" Count="0" />
-      <LineId Id="41" Count="2" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_BaseplateChiller.Reset">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

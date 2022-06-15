@@ -87,6 +87,12 @@ VAR
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:AMPHOS_MRC03'}
 	fbAmphosMRC03 : FB_AmphosMRC; // MRC monitor 03
 	*)
+	
+	{attribute 'pytmc' := '
+		pv: @(BASE):LPS:MASTER_OVERRIDE
+		io: o
+	'}
+	bMasterOverride : BOOL; // Master override control for safety system.
     
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:PLC'}
 	fbDiag : FB_EcatDiag; // Ethercat diagnostics
@@ -98,7 +104,7 @@ END_VAR
 *******************************************************************)
 (* Check PLC hardware for failures *)
 fbDiag(AMSNetId := GVL_PLC.AMSNetId);
-stErrors.bHardwareFailure := fbDiag.bError OR fbTraceTekModbus.bError;
+stErrors.bHardwareFailure := (fbDiag.bError OR fbTraceTekModbus.bError) AND NOT bMasterOverride;
 
 (******************************************************************* 
 Feed each device function block inputs from the PLC IO. Collect error states detected
@@ -282,24 +288,35 @@ GVL_IO.bAmphosShutterEnable := F_AmphosShutterEnable(
 	bLoopTempOverride03 := fbChillerLoop03.bOperatorOverride,
 	bLoopTempOverride04 := fbChillerLoop04.bOperatorOverride,
 	stOpcpaSetpoints := GVL_Laser.stOpcpaSP,
-	stErrors := stErrors
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
 );
 	
 (* Enable Carbide shutter if interlock logic passes *)
-GVL_IO.bCarbideShutterEnable := F_CarbideShutterEnable(stErrors := stErrors);
+GVL_IO.bCarbideShutterEnable := F_CarbideShutterEnable(
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
+);
 	
 (* Enable Dump chiller if interlock logic passes *)
-GVL_IO.bDumpChillerRelay := F_DumpChillerEnable(stErrors := stErrors);
+GVL_IO.bDumpChillerRelay := F_DumpChillerEnable(
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
+);
 
 (* Enable Baseplate chiller if interlock logic passes *)
-GVL_IO.bBaseplateChillerRelay := F_BaseplateChillerEnable(stErrors := stErrors);
+GVL_IO.bBaseplateChillerRelay := F_BaseplateChillerEnable(
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
+);
 
 (* Enable Amphos if interlock logic passes *)
 GVL_IO.bAmphosRelay := F_AmphosEnable(
 	fAmphosVoltage := fbAmphos.fVoltage,
 	bEnabled := GVL_IO.bAmphosRelay,
 	stAmphosSetpoints := GVL_Laser.stAmphosSP,
-	stErrors := stErrors
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
 );
 
 (******************************************************************* 

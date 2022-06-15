@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="F_CarbideShutterEnable" Id="{6b2b070e-0295-4d27-a821-90f06b1926e9}" SpecialFunc="None">
     <Declaration><![CDATA[// Interlock logic for the Carbide Shutter
 FUNCTION F_CarbideShutterEnable : BOOL
 VAR_INPUT
+	bMasterOverride : BOOL; //Master manual override control input
 END_VAR
 VAR_IN_OUT CONSTANT
 	stErrors : ST_ErrorStates; // Currently detected errors
@@ -12,21 +13,14 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF stErrors.bHardwareFailure // Close carbide shutter if there is a hardware failure
-	OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable // Close carbide shutter if leak in OPCPA with carbide on or if there is a leak under the table
+      <ST><![CDATA[IF (stErrors.bHardwareFailure // Close carbide shutter if there is a hardware failure
+	OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable) // Close carbide shutter if leak in OPCPA with carbide on or if there is a leak under the table
+	AND NOT bMasterOverride //if master override is TRUE, ignore all errors
 THEN
 	F_CarbideShutterEnable := FALSE;
 ELSE
 	F_CarbideShutterEnable := TRUE;
 END_IF]]></ST>
     </Implementation>
-    <LineIds Name="F_CarbideShutterEnable">
-      <LineId Id="45" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="43" Count="1" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

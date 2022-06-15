@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FB_LeakMonitor" Id="{e43e7b93-d8f6-4d91-924b-e9e5b24db374}" SpecialFunc="None">
     <Declaration><![CDATA[// Detect leaks and leak locations
 FUNCTION_BLOCK FB_LeakMonitor
@@ -13,6 +13,13 @@ VAR_IN_OUT CONSTANT
 	stBound : ST_LeakBoundaries; // Setpoints for calculating leak locations from location resistance
 END_VAR
 VAR_OUTPUT
+	
+	{attribute 'pytmc' := '
+		pv: LOW_RES
+		io: i
+	'}
+	bLowResistance : BOOL := FALSE;    
+
 	{attribute 'pytmc' := '
 		pv: LEAKS
 		io: i
@@ -66,7 +73,13 @@ VAR_OUTPUT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF bLeakDetected THEN
+      <ST><![CDATA[IF (nLocationResistance < 200) THEN
+	bLowResistance := TRUE;
+ELSE
+	bLowResistance := FALSE;
+END_IF
+
+IF (bLeakDetected OR bLowResistance) THEN
 	(* Find leak location for PV. Stays until reset *)
 	IF stBound.nLMin1 <= nLocationResistance AND nLocationResistance < stBound.nLMax1 THEN
 		nLeakLocations := nLeakLocations OR E_LeakLocation.LOC1;
@@ -84,7 +97,7 @@ END_VAR
 
 	
 	(* Latch Optical table leak errors *)
-	IF stBound.nLMin1 <= nLocationResistance AND nLocationResistance < stBound.nLMax4 THEN
+	IF (stBound.nLMin1 <= nLocationResistance AND nLocationResistance < stBound.nLMax4) THEN
 		IF bAmphosOn THEN
 			bLeakOpticalTableAmphosOn := TRUE;
 		ELSIF NOT bCarbideOn THEN
@@ -93,17 +106,17 @@ END_VAR
 	END_IF
 	
 	(* Latch carbide leak errors *)
-	IF bCarbideOn AND stBound.nLMin1 <= nLocationResistance AND nLocationResistance < stBound.nLMax2 THEN
+	IF (bCarbideOn AND stBound.nLMin1 <= nLocationResistance AND nLocationResistance < stBound.nLMax2) THEN
 		bLeakOpcpaCarbideOn := TRUE;
 	END_IF
 	
 	(* Latch leak under table errors *)
-	IF stBound.nLMin5 <= nLocationResistance AND nLocationResistance < stBound.nLMax5 THEN
+	IF (stBound.nLMin5 <= nLocationResistance AND nLocationResistance < stBound.nLMax5) THEN
 		bLeakUnderTable := TRUE;
 	END_IF
 	
 	(* Latch leak inside rack errors *)
-	IF stBound.nLMin6 <= nLocationResistance AND nLocationResistance < stBound.nLMax6 THEN
+	IF (stBound.nLMin6 <= nLocationResistance AND nLocationResistance < stBound.nLMax6) THEN
 		bLeakInsideRacks := TRUE;
 	END_IF
 END_IF
@@ -124,25 +137,5 @@ bLeakUnderTable := FALSE;
 bLeakInsideRacks := FALSE;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_LeakMonitor">
-      <LineId Id="725" Count="0" />
-      <LineId Id="677" Count="12" />
-      <LineId Id="692" Count="0" />
-      <LineId Id="726" Count="0" />
-      <LineId Id="724" Count="0" />
-      <LineId Id="693" Count="7" />
-      <LineId Id="727" Count="0" />
-      <LineId Id="701" Count="3" />
-      <LineId Id="728" Count="0" />
-      <LineId Id="705" Count="3" />
-      <LineId Id="729" Count="0" />
-      <LineId Id="709" Count="4" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_LeakMonitor.Reset">
-      <LineId Id="15" Count="0" />
-      <LineId Id="7" Count="3" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

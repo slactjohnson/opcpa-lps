@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FB_DumpChiller" Id="{116e5a5e-5390-4f77-a571-6eef4757f21f}" SpecialFunc="None">
     <Declaration><![CDATA[// Monitors the dump chiller from the flow sensor
 FUNCTION_BLOCK FB_DumpChiller
@@ -23,7 +23,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Latch error if the dump chiller flow detects an error and the amphos is on *)
-IF bAmphosOn AND NOT bDumpChillerFlow THEN
+IF bAmphosOn AND bDumpChillerFlow THEN
 	bError := TRUE;
 END_IF]]></ST>
     </Implementation>
@@ -37,13 +37,5 @@ END_VAR
         <ST><![CDATA[bError := FALSE;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_DumpChiller">
-      <LineId Id="39" Count="0" />
-      <LineId Id="18" Count="1" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_DumpChiller.Reset">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

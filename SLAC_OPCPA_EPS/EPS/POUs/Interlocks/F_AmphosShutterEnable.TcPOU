@@ -10,6 +10,7 @@ VAR_INPUT
 	bLoopTempOverride02 : BOOL; // Whether the chiller loop error is overriden
 	bLoopTempOverride03 : BOOL; // Whether the chiller loop error is overriden
 	bLoopTempOverride04 : BOOL; // Whether the chiller loop error is overriden
+	bMasterOverride : BOOL; //Master manual override control input
 END_VAR
 VAR_IN_OUT CONSTANT
 	stErrors : ST_ErrorStates; // Currently detected errors
@@ -19,7 +20,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF stErrors.bHardwareFailure // Close shutter if there is a hardware failure
+      <ST><![CDATA[IF (stErrors.bHardwareFailure // Close shutter if there is a hardware failure
 	OR stErrors.bLeakOpticalTableAmphosOn OR stErrors.bLeakOpcpaCarbideOn OR stErrors.bLeakUnderTable // Close shutter if there is a leak on the optical table with the amphos on, a leak under the table, or a leak inside the OPCPA with Carbide on
 	OR bAmphosOn AND (
 		(NOT bLoopTempOverride01 AND stErrors.bChillerLoop01) OR 
@@ -29,8 +30,9 @@ END_VAR
 	OR fOpcpaVoltage < stOpcpaSetpoints.nMinVoltage AND stErrors.bOpcpaBeam // Close shutter if in OPCPA beam error state and OPCPA voltage too low
 	(*OR stErrors.bTempMon01 OR stErrors.bTempMon02 OR stErrors.bTempMon03 OR stErrors.bTempMon04 OR stErrors.bTempMon05 OR 
 		stErrors.bTempMon06 OR stErrors.bTempMon07 OR stErrors.bTempMon08 // Close shutter if temperature too high at any monitor location *)
-	OR stErrors.bDumpChiller // Close shutter if there is a Dump Chiller error
+	OR stErrors.bDumpChiller) // Close shutter if there is a Dump Chiller error
 	(* OR stErrors.bAmphosMRC02 OR stErrors.bAmphosMRC03 // Close shutter if there are errors on the additional MRCs *)
+	AND NOT bMasterOverride //if master override is TRUE, ignore all errors
 THEN
 	F_AmphosShutterEnable := FALSE;
 ELSE

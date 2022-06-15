@@ -234,11 +234,6 @@
 							<Type GUID="{5BEACB64-8490-46B4-B636-A0EB00630394}" Namespace="Tc2_ModbusRTU">MB_KL6inData22B</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.bAmphosOn</Name>
-							<Comment><![CDATA[ Ch1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_IO.nOpcpaVoltageRaw</Name>
 							<Comment><![CDATA[ Ch1]]></Comment>
 							<Type>INT</Type>
@@ -253,44 +248,9 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.nTempMonRaw01</Name>
+							<Name>GVL_IO.bAmphosOn</Name>
 							<Comment><![CDATA[ Ch1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw02</Name>
-							<Comment><![CDATA[ Ch2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw03</Name>
-							<Comment><![CDATA[ Ch3]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw04</Name>
-							<Comment><![CDATA[ Ch4]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw05</Name>
-							<Comment><![CDATA[ Ch1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw06</Name>
-							<Comment><![CDATA[ Ch2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw07</Name>
-							<Comment><![CDATA[ Ch3]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.nTempMonRaw08</Name>
-							<Comment><![CDATA[ Ch4]]></Comment>
-							<Type>INT</Type>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_IO.bLeakDetected</Name>
@@ -318,33 +278,18 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.bDumpChillerFlow</Name>
-							<Comment><![CDATA[ Ch7 Dump chiller NC flow sensor]]></Comment>
+							<Name>GVL_IO.bBaseplateChillerFlow</Name>
+							<Comment><![CDATA[ Ch7 Baseplate chiller NC flow sensor	]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.bBaseplateChillerFlow</Name>
-							<Comment><![CDATA[ Ch8 Baseplate chiller NC flow sensor	]]></Comment>
+							<Name>GVL_IO.bDumpChillerFlow</Name>
+							<Comment><![CDATA[ Ch2 Dump chiller NC flow sensor]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_IO.bCarbideOn</Name>
 							<Comment><![CDATA[ Ch1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.bAmphosMRC01</Name>
-							<Comment><![CDATA[ Ch2 NC Amphos MRC switch]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.bAmphosMRC02</Name>
-							<Comment><![CDATA[ Ch3 NC Amphos MRC switch]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.bAmphosMRC03</Name>
-							<Comment><![CDATA[ Ch4 NC Amphos MRC switch]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -365,7 +310,7 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.bCarbideShutterEnable</Name>
-							<Comment><![CDATA[ Ch2]]></Comment>
+							<Comment><![CDATA[ Ch2 HASS]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -875,11 +820,6 @@ Bit1: Value smaller than Limit2]]></Comment>
 						<ImageId>1002</ImageId>
 						<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23e53050" InfoDataState="false" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9189 Potential Connection, 16 x Ground" Desc="EL9189" PortABoxInfo="#x01000003"/>
 					</Box>
-					<Box Id="17" BoxType="9099">
-						<Name>LPS_PLC_E04_EL9184</Name>
-						<ImageId>1002</ImageId>
-						<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23e03050" InfoDataState="false" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9184 Potential Connection, 8 x 24V, 8 x Ground" Desc="EL9184" PortABoxInfo="#x01000003"/>
-					</Box>
 					<Box Id="4" BoxType="9099" BoxFlags="#x00000020">
 						<Name>LPS_PLC_E05_EL3174</Name>
 						<ImageId>1001</ImageId>
@@ -1377,7 +1317,7 @@ Bit1: Value smaller than Limit2]]></Comment>
 								<Entry Name="Status__Output buffer overflow" Index="#x6020" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Output state" Index="#x6020" Sub="#x03">
+								<Entry Name="Status__Output state" Index="#x6020" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__">
@@ -3697,7 +3637,7 @@ Bit1: Value smaller than Limit2]]></Comment>
 								<Entry Name="Ctrl__">
 									<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
 								</Entry>
-								<Entry Name="Outputs__Output event state 1" Index="#x7011" Sub="#x21">
+								<Entry Name="Outputs__Output event state 1" Index="#x7011" Sub="#x21" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Outputs__Output event state 2" Index="#x7011" Sub="#x22">
@@ -5548,7 +5488,7 @@ Bit1: Value smaller than Limit2]]></Comment>
 								<Entry Name="Status__Output buffer overflow" Index="#x6000" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Output state" Index="#x6000" Sub="#x03">
+								<Entry Name="Status__Output state" Index="#x6000" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__">
@@ -5732,7 +5672,7 @@ Bit1: Value smaller than Limit2]]></Comment>
 								<Entry Name="Status__Input state" Index="#x6081" Sub="#x09" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Input buffer overflow" Index="#x6081" Sub="#x0a">
+								<Entry Name="Status__Input buffer overflow" Index="#x6081" Sub="#x0a" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__">
@@ -7001,7 +6941,7 @@ Bit1: Value smaller than Limit2]]></Comment>
 								<Entry Name="Status__No of input events" Index="#x60e1" Sub="#x01">
 									<Type>USINT</Type>
 								</Entry>
-								<Entry Name="Status__Input state" Index="#x60e1" Sub="#x09">
+								<Entry Name="Status__Input state" Index="#x60e1" Sub="#x09" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__Input buffer overflow" Index="#x60e1" Sub="#x0a">
@@ -7019,7 +6959,7 @@ Bit1: Value smaller than Limit2]]></Comment>
 								<Entry Name="Status__Input order feedback" Index="#x60e1" Sub="#x12">
 									<Type>USINT</Type>
 								</Entry>
-								<Entry Name="Inputs__Input event state 1" Index="#x60e1" Sub="#x21">
+								<Entry Name="Inputs__Input event state 1" Index="#x60e1" Sub="#x21" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Inputs__Input event state 2" Index="#x60e1" Sub="#x22">
@@ -7213,7 +7153,7 @@ Bit1: Value smaller than Limit2]]></Comment>
 								<Entry Name="Status__No of input events" Index="#x60f1" Sub="#x01">
 									<Type>USINT</Type>
 								</Entry>
-								<Entry Name="Status__Input state" Index="#x60f1" Sub="#x09">
+								<Entry Name="Status__Input state" Index="#x60f1" Sub="#x09" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__Input buffer overflow" Index="#x60f1" Sub="#x0a">
@@ -10629,22 +10569,10 @@ Bit1: Value smaller than Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_IO.nAmphosVoltageRaw" VarB="AI Standard Channel 2^Value"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.nOpcpaVoltageRaw" VarB="AI Standard Channel 1^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E05_EL3174">
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw01" VarB="AI Standard Channel 1^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw02" VarB="AI Standard Channel 2^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw03" VarB="AI Standard Channel 3^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw04" VarB="AI Standard Channel 4^Value"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E06_EL3174">
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw05" VarB="AI Standard Channel 1^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw06" VarB="AI Standard Channel 2^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw07" VarB="AI Standard Channel 3^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.nTempMonRaw08" VarB="AI Standard Channel 4^Value"/>
-			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E07_EL1259">
 				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosOn" VarB="MTI Inputs 10x Channel 1^Status^Input state"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bBaseplateChillerFlow" VarB="MTI Inputs 10x Channel 8^Status^Input state"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bDumpChillerFlow" VarB="MTI Inputs 10x Channel 7^Status^Input state"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.bBaseplateChillerFlow" VarB="MTI Inputs 10x Channel 7^Status^Input state"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.bDumpChillerFlow" VarB="MTI Inputs 10x Channel 8^Status^Input state" AutoLink="true"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bLeakDetected" VarB="MTI Inputs 10x Channel 2^Status^Input state" AutoLink="true"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bLoopTempSW01" VarB="MTI Inputs 10x Channel 3^Status^Input state"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bLoopTempSW02" VarB="MTI Inputs 10x Channel 4^Status^Input state"/>
@@ -10713,10 +10641,8 @@ Bit1: Value smaller than Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^MAIN.fbTraceTekModbus.fbModbusMaster.OutData^D" VarB="COM Outputs Channel 1^Data Out 9" Size="8" OffsA="72"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E14_EL1124">
-				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosMRC01" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosMRC02" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosMRC03" VarB="Channel 4^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bCarbideOn" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.bDumpChillerFlow" VarB="Channel 2^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

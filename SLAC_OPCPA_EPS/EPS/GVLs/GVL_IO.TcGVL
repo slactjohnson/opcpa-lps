@@ -63,10 +63,14 @@ VAR_GLOBAL
     bLoopTempSW03 AT %I* : BOOL; // Ch5 Loop 03 NC Temp switch
     {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 6^Status^Input state'}
     bLoopTempSW04 AT %I* : BOOL; // Ch6 Loop 04 NC Temp switch
-    {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 7^Status^Input state'}
-    bDumpChillerFlow AT %I* : BOOL; // Ch7 Dump chiller NC flow sensor
+	
+	{attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 7^Status^Input state'}
+	bBaseplateChillerFlow AT %I* : BOOL; // Ch7 Baseplate chiller NC flow sensor	
+	
+	
     {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTI Inputs 10x Channel 8^Status^Input state'}
-	bBaseplateChillerFlow AT %I* : BOOL; // Ch8 Baseplate chiller NC flow sensor	
+    bDumpChillerFlow AT %I* : BOOL; // Ch2 Dump chiller NC flow sensor
+
 	
 	(* Slot7 EL1259 Outputs *)
     (*
@@ -109,7 +113,7 @@ VAR_GLOBAL
 		field: ONAM ENABLED
 	'}
     {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E07_EL1259]^MTO Outputs 10x Channel 2^Ctrl^Manual output state'}
-	bCarbideShutterEnable AT %Q* : BOOL; // Ch2
+	bCarbideShutterEnable AT %Q* : BOOL; // Ch2 HASS
     
     
 	bCarbideShutterEnableManualOperation AT %Q* : BOOL := TRUE;
@@ -167,7 +171,8 @@ VAR_GLOBAL
 	'}
     {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 1^Input'}
 	bCarbideOn AT %I* : BOOL; // Ch1
-    
+
+
     (*
     {attribute 'TcLinkTo' := 'TIIB[LPS_PLC_E14_EL1124]^Channel 2^Input'}
 	bAmphosMRC01 AT %I* : BOOL; // Ch2 NC Amphos MRC switch
