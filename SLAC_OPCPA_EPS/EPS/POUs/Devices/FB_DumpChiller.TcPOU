@@ -23,7 +23,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Latch error if the dump chiller flow detects an error and the amphos is on *)
-IF bAmphosOn AND bDumpChillerFlow THEN
+IF bAmphosOn AND NOT bDumpChillerFlow THEN
 	bError := TRUE;
 END_IF]]></ST>
     </Implementation>

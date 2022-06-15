@@ -10572,7 +10572,7 @@ Bit1: Value smaller than Limit2]]></Comment>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E07_EL1259">
 				<Link VarA="PlcTask Inputs^GVL_IO.bAmphosOn" VarB="MTI Inputs 10x Channel 1^Status^Input state"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bBaseplateChillerFlow" VarB="MTI Inputs 10x Channel 7^Status^Input state"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bDumpChillerFlow" VarB="MTI Inputs 10x Channel 8^Status^Input state" AutoLink="true"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.bDumpChillerFlow" VarB="MTI Inputs 10x Channel 8^Status^Input state"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bLeakDetected" VarB="MTI Inputs 10x Channel 2^Status^Input state" AutoLink="true"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bLoopTempSW01" VarB="MTI Inputs 10x Channel 3^Status^Input state"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bLoopTempSW02" VarB="MTI Inputs 10x Channel 4^Status^Input state"/>
@@ -10642,7 +10642,6 @@ Bit1: Value smaller than Limit2]]></Comment>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^LPS_PLC_E14_EL1124">
 				<Link VarA="PlcTask Inputs^GVL_IO.bCarbideOn" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.bDumpChillerFlow" VarB="Channel 2^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>
