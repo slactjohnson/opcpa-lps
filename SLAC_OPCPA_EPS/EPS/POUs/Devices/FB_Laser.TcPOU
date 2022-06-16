@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FB_Laser" Id="{eeae44b8-5281-462f-b9ad-0ed693927e51}" SpecialFunc="None">
     <Declaration><![CDATA[// Monitors the lasers for under voltage events
 FUNCTION_BLOCK FB_Laser
@@ -56,15 +56,5 @@ END_VAR
         <ST><![CDATA[bError := FALSE;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_Laser">
-      <LineId Id="183" Count="0" />
-      <LineId Id="111" Count="5" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="117" Count="2" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Laser.Reset">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="F_AmphosEnable" Id="{985578da-c888-4cd6-8fc2-8ee3835dc59d}" SpecialFunc="None">
     <Declaration><![CDATA[// Interlock logic for the Amphos relay
 FUNCTION F_AmphosEnable : BOOL
 VAR_INPUT
 	fAmphosVoltage : LREAL; // The Amphos voltage
 	bEnabled : BOOL; // Whether the amphos enable signal is currently on
+	bMasterOverride : BOOL; //Master manual override control input
 END_VAR
 VAR_IN_OUT CONSTANT
 	stAmphosSetpoints : ST_LaserSetpoints; // The Amphos setpoints
@@ -13,9 +14,10 @@ VAR_IN_OUT CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF stErrors.bHardwareFailure // Disable Amphos if there is a hardware failure
+      <ST><![CDATA[IF (stErrors.bHardwareFailure // Disable Amphos if there is a hardware failure
 	OR stErrors.bAmphosBeam AND fAmphosVoltage < stAmphosSetpoints.nMinVoltage // Disable Amphos if there is a beam error
-	OR stErrors.bAmphosBeam AND NOT bEnabled // Once amphos is disabled, keep it disabled until beam error is reset
+	OR stErrors.bAmphosBeam AND NOT bEnabled) // Once amphos is disabled, keep it disabled until beam error is reset
+	AND NOT bMasterOverride //if master override is TRUE, ignore all errors
 THEN
 	F_AmphosEnable := FALSE;
 ELSE
@@ -23,15 +25,5 @@ ELSE
 END_IF
 ]]></ST>
     </Implementation>
-    <LineIds Name="F_AmphosEnable">
-      <LineId Id="57" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="59" Count="1" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="MAIN" Id="{749355aa-8fe6-4a8e-b863-c3c2acf01034}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -40,6 +40,8 @@ VAR
 	'}
 	bOpcpaReset : BOOL; // OPCPA laser error unlatch flag
 	
+	
+	(*
 	// Temperature monitors
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON01'}
 	fbTempMon01 : FB_TemperatureMonitor; // System temperature monitor 01
@@ -57,6 +59,7 @@ VAR
 	fbTempMon07 : FB_TemperatureMonitor; // System temperature monitor 07
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:TEMPMON08'}
 	fbTempMon08 : FB_TemperatureMonitor; // System temperature monitor 08
+	*)
 	
 	// Chillers
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:DUMP_CHILLER'}
@@ -74,15 +77,23 @@ VAR
 		io: o
 	'}
 	bBaseplateChillerReset : BOOL; // Baseplate chiller error unlatch flag
-	
-	// Amphos MRCs
+    
+    (*
+    // Amphos MRCs
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:AMPHOS_MRC01'}
 	fbAmphosMRC01 : FB_AmphosMRC; // MRC monitor 01
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:AMPHOS_MRC02'}
 	fbAmphosMRC02 : FB_AmphosMRC; // MRC monitor 02
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:AMPHOS_MRC03'}
 	fbAmphosMRC03 : FB_AmphosMRC; // MRC monitor 03
+	*)
 	
+	{attribute 'pytmc' := '
+		pv: @(BASE):LPS:MASTER_OVERRIDE
+		io: o
+	'}
+	bMasterOverride : BOOL; // Master override control for safety system.
+    
 	{attribute 'pytmc' := 'pv: @(BASE):LPS:PLC'}
 	fbDiag : FB_EcatDiag; // Ethercat diagnostics
 END_VAR
@@ -93,7 +104,7 @@ END_VAR
 *******************************************************************)
 (* Check PLC hardware for failures *)
 fbDiag(AMSNetId := GVL_PLC.AMSNetId);
-stErrors.bHardwareFailure := fbDiag.bError OR fbTraceTekModbus.bError;
+stErrors.bHardwareFailure := (fbDiag.bError OR fbTraceTekModbus.bError) AND NOT bMasterOverride;
 
 (******************************************************************* 
 Feed each device function block inputs from the PLC IO. Collect error states detected
@@ -154,6 +165,7 @@ fbOpcpa(
 	bError => stErrors.bOpcpaBeam
 );
 
+(*
 (* Monitors system temperature from sensor 1 *)
 fbTempMon01(
 	nTempMonRaw := GVL_IO.nTempMonRaw01,
@@ -217,6 +229,7 @@ fbTempMon08(
 	stSetpoints := GVL_TemperatureMonitor.stTempMonSP08,
 	bError => stErrors.bTempMon08
 );
+*)
 
 (* Flow sensor monitor for the dump chiller *)
 fbDumpChiller(
@@ -231,6 +244,7 @@ fbBaseplateChiller(
 	bError => stErrors.bBaseplateChiller
 );
 	
+(*
 (* Detects problems with MRC 1 *)
 fbAmphosMRC01(
 	bAmphosOn := GVL_IO.bAmphosOn,
@@ -251,6 +265,7 @@ fbAmphosMRC03(
 	bMRC := GVL_IO.bAmphosMRC03,
 	bError => stErrors.bAmphosMRC03
 );
+*)
 
 (******************************************************************* 
 Now that each of the input signals have been checked and errors stored,
@@ -273,24 +288,35 @@ GVL_IO.bAmphosShutterEnable := F_AmphosShutterEnable(
 	bLoopTempOverride03 := fbChillerLoop03.bOperatorOverride,
 	bLoopTempOverride04 := fbChillerLoop04.bOperatorOverride,
 	stOpcpaSetpoints := GVL_Laser.stOpcpaSP,
-	stErrors := stErrors
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
 );
 	
 (* Enable Carbide shutter if interlock logic passes *)
-GVL_IO.bCarbideShutterEnable := F_CarbideShutterEnable(stErrors := stErrors);
+GVL_IO.bCarbideShutterEnable := F_CarbideShutterEnable(
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
+);
 	
 (* Enable Dump chiller if interlock logic passes *)
-GVL_IO.bDumpChillerRelay := F_DumpChillerEnable(stErrors := stErrors);
+GVL_IO.bDumpChillerRelay := F_DumpChillerEnable(
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
+);
 
 (* Enable Baseplate chiller if interlock logic passes *)
-GVL_IO.bBaseplateChillerRelay := F_BaseplateChillerEnable(stErrors := stErrors);
+GVL_IO.bBaseplateChillerRelay := F_BaseplateChillerEnable(
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
+);
 
 (* Enable Amphos if interlock logic passes *)
 GVL_IO.bAmphosRelay := F_AmphosEnable(
 	fAmphosVoltage := fbAmphos.fVoltage,
 	bEnabled := GVL_IO.bAmphosRelay,
 	stAmphosSetpoints := GVL_Laser.stAmphosSP,
-	stErrors := stErrors
+	stErrors := stErrors,
+	bMasterOverride := bMasterOverride
 );
 
 (******************************************************************* 
@@ -356,144 +382,5 @@ ELSIF bBaseplateChillerReset THEN
 END_IF
 ]]></ST>
     </Implementation>
-    <LineIds Name="MAIN">
-      <LineId Id="2079" Count="1" />
-      <LineId Id="2176" Count="0" />
-      <LineId Id="2081" Count="0" />
-      <LineId Id="2077" Count="0" />
-      <LineId Id="2376" Count="0" />
-      <LineId Id="2078" Count="0" />
-      <LineId Id="1952" Count="0" />
-      <LineId Id="1956" Count="1" />
-      <LineId Id="1953" Count="0" />
-      <LineId Id="1349" Count="5" />
-      <LineId Id="1660" Count="0" />
-      <LineId Id="1355" Count="6" />
-      <LineId Id="2156" Count="0" />
-      <LineId Id="1362" Count="4" />
-      <LineId Id="2157" Count="0" />
-      <LineId Id="1367" Count="4" />
-      <LineId Id="2158" Count="0" />
-      <LineId Id="1372" Count="4" />
-      <LineId Id="2159" Count="0" />
-      <LineId Id="1377" Count="4" />
-      <LineId Id="2160" Count="0" />
-      <LineId Id="1382" Count="2" />
-      <LineId Id="1695" Count="0" />
-      <LineId Id="1385" Count="2" />
-      <LineId Id="2161" Count="0" />
-      <LineId Id="1388" Count="2" />
-      <LineId Id="1696" Count="0" />
-      <LineId Id="1391" Count="2" />
-      <LineId Id="2162" Count="0" />
-      <LineId Id="1394" Count="2" />
-      <LineId Id="1787" Count="0" />
-      <LineId Id="1397" Count="2" />
-      <LineId Id="2163" Count="0" />
-      <LineId Id="1400" Count="2" />
-      <LineId Id="1788" Count="0" />
-      <LineId Id="1403" Count="2" />
-      <LineId Id="2164" Count="0" />
-      <LineId Id="1406" Count="2" />
-      <LineId Id="1789" Count="0" />
-      <LineId Id="1409" Count="2" />
-      <LineId Id="2165" Count="0" />
-      <LineId Id="1412" Count="2" />
-      <LineId Id="1790" Count="0" />
-      <LineId Id="1415" Count="2" />
-      <LineId Id="2166" Count="0" />
-      <LineId Id="1418" Count="2" />
-      <LineId Id="1791" Count="0" />
-      <LineId Id="1421" Count="2" />
-      <LineId Id="2167" Count="0" />
-      <LineId Id="1424" Count="2" />
-      <LineId Id="1792" Count="0" />
-      <LineId Id="1427" Count="2" />
-      <LineId Id="2168" Count="0" />
-      <LineId Id="1430" Count="2" />
-      <LineId Id="1793" Count="0" />
-      <LineId Id="1433" Count="2" />
-      <LineId Id="2169" Count="0" />
-      <LineId Id="1436" Count="2" />
-      <LineId Id="1794" Count="0" />
-      <LineId Id="1439" Count="2" />
-      <LineId Id="2170" Count="0" />
-      <LineId Id="1442" Count="5" />
-      <LineId Id="2171" Count="0" />
-      <LineId Id="1448" Count="4" />
-      <LineId Id="2172" Count="0" />
-      <LineId Id="1453" Count="5" />
-      <LineId Id="2173" Count="0" />
-      <LineId Id="1459" Count="5" />
-      <LineId Id="2174" Count="0" />
-      <LineId Id="1465" Count="4" />
-      <LineId Id="1962" Count="4" />
-      <LineId Id="1600" Count="0" />
-      <LineId Id="2555" Count="0" />
-      <LineId Id="1473" Count="4" />
-      <LineId Id="2556" Count="0" />
-      <LineId Id="2181" Count="0" />
-      <LineId Id="1478" Count="6" />
-      <LineId Id="1697" Count="0" />
-      <LineId Id="1485" Count="2" />
-      <LineId Id="2182" Count="0" />
-      <LineId Id="1488" Count="1" />
-      <LineId Id="2183" Count="0" />
-      <LineId Id="1490" Count="1" />
-      <LineId Id="2184" Count="0" />
-      <LineId Id="1492" Count="1" />
-      <LineId Id="2185" Count="0" />
-      <LineId Id="1494" Count="1" />
-      <LineId Id="2469" Count="0" />
-      <LineId Id="1698" Count="0" />
-      <LineId Id="1496" Count="1" />
-      <LineId Id="1868" Count="0" />
-      <LineId Id="1969" Count="1" />
-      <LineId Id="1973" Count="0" />
-      <LineId Id="2175" Count="0" />
-      <LineId Id="2180" Count="0" />
-      <LineId Id="1866" Count="0" />
-      <LineId Id="2378" Count="0" />
-      <LineId Id="1870" Count="0" />
-      <LineId Id="1873" Count="0" />
-      <LineId Id="1875" Count="0" />
-      <LineId Id="2057" Count="0" />
-      <LineId Id="1693" Count="0" />
-      <LineId Id="1974" Count="0" />
-      <LineId Id="1976" Count="0" />
-      <LineId Id="1975" Count="0" />
-      <LineId Id="1685" Count="0" />
-      <LineId Id="1672" Count="0" />
-      <LineId Id="1688" Count="0" />
-      <LineId Id="2177" Count="0" />
-      <LineId Id="1666" Count="0" />
-      <LineId Id="1668" Count="1" />
-      <LineId Id="1687" Count="0" />
-      <LineId Id="1531" Count="0" />
-      <LineId Id="1690" Count="0" />
-      <LineId Id="1663" Count="0" />
-      <LineId Id="1711" Count="0" />
-      <LineId Id="2178" Count="0" />
-      <LineId Id="1712" Count="1" />
-      <LineId Id="1715" Count="0" />
-      <LineId Id="2274" Count="0" />
-      <LineId Id="1717" Count="1" />
-      <LineId Id="1714" Count="0" />
-      <LineId Id="1719" Count="0" />
-      <LineId Id="2179" Count="0" />
-      <LineId Id="1720" Count="1" />
-      <LineId Id="1723" Count="0" />
-      <LineId Id="2275" Count="0" />
-      <LineId Id="1724" Count="2" />
-      <LineId Id="2271" Count="2" />
-      <LineId Id="2276" Count="0" />
-      <LineId Id="2278" Count="2" />
-      <LineId Id="2277" Count="0" />
-      <LineId Id="2281" Count="4" />
-      <LineId Id="2289" Count="0" />
-      <LineId Id="2286" Count="2" />
-      <LineId Id="1603" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

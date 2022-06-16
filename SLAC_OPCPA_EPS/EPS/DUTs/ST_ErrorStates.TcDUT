@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <DUT Name="ST_ErrorStates" Id="{01fc80e0-e88b-4244-badd-6975c9c0b2a0}">
     <Declaration><![CDATA[// Error states that can occur in the program
 TYPE ST_ErrorStates :
@@ -21,6 +21,7 @@ STRUCT
 	bAmphosBeam : BOOL; // Amphos beam error
 	bOpcpaBeam : BOOL; // OPCPA beam error
 	
+    (*
 	// Temperature monitors
 	bTempMon01 : BOOL; // Temperature too high at location 01
 	bTempMon02 : BOOL; // Temperature too high at location 02
@@ -30,16 +31,19 @@ STRUCT
 	bTempMon06 : BOOL; // Temperature too high at location 06
 	bTempMon07 : BOOL; // Temperature too high at location 07
 	bTempMon08 : BOOL; // Temperature too high at location 08
+    *)
 	
 	// Dump chiller
 	bDumpChiller : BOOL; // Dump chiller error
 	bBaseplateChiller : BOOL; // Baseplate chiller error
 	
+    (*
 	// Amphos MRC
 	bAmphosMRC01 : BOOL; // Amphos MRC 01 Error
 	bAmphosMRC02 : BOOL; // Amphos MRC 01 Error
 	bAmphosMRC03 : BOOL; // Amphos MRC 01 Error
-	
+	*)
+    
 	// Hardware Failure
 	bHardwareFailure : BOOL; // A component of the EPS has failed
 	

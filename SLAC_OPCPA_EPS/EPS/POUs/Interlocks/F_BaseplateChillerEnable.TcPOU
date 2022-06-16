@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.14">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="F_BaseplateChillerEnable" Id="{1364b9de-d1e4-4cd9-be0a-b8eefa4075df}" SpecialFunc="None">
     <Declaration><![CDATA[// Interlock logic for the Baseplate Chiller
 FUNCTION F_BaseplateChillerEnable : BOOL
 VAR_INPUT
+	bMasterOverride : BOOL; //Master manual override control input
 END_VAR
 VAR_IN_OUT CONSTANT
 	stErrors : ST_ErrorStates; // Currently detected errors
@@ -12,8 +13,9 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF stErrors.bHardwareFailure // Disable baseplate chiller if there is a hardware failure
-	OR stErrors.bLeakUnderTable // Disable baseplate chiller if there is a leak under the table
+      <ST><![CDATA[IF (stErrors.bHardwareFailure // Disable baseplate chiller if there is a hardware failure
+	OR stErrors.bLeakUnderTable) // Disable baseplate chiller if there is a leak under the table
+	AND NOT bMasterOverride //if master override is TRUE, ignore all errors
 THEN
 	F_BaseplateChillerEnable := FALSE;
 ELSE
@@ -21,14 +23,5 @@ ELSE
 END_IF
 ]]></ST>
     </Implementation>
-    <LineIds Name="F_BaseplateChillerEnable">
-      <LineId Id="54" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="52" Count="1" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
